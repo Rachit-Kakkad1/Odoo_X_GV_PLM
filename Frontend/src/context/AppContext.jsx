@@ -33,7 +33,7 @@ export function AppProvider({ children }) {
   const fetchAllData = useCallback(async (token) => {
     try {
       const headers = { 'Authorization': `Bearer ${token}` };
-      const apiBase = 'http://localhost:3000/api';
+      const apiBase = 'http://localhost:5000/api';
       
       const [prodRes, bomRes, ecoRes, notifRes] = await Promise.all([
         fetch(`${apiBase}/products`, { headers }),
@@ -66,7 +66,7 @@ export function AppProvider({ children }) {
     const user = users.find(u => u.id === userId);
     if (!user) return;
     try {
-      const res = await fetch('http://localhost:3000/api/auth/login', {
+      const res = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: user.email, password: 'password123' })
@@ -104,7 +104,7 @@ export function AppProvider({ children }) {
       return;
     }
     // Validate token and restore session
-    fetch('http://localhost:3000/api/auth/me', {
+    fetch('http://localhost:5000/api/auth/me', {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -148,7 +148,7 @@ export function AppProvider({ children }) {
 
   const addBom = useCallback(async (bom) => {
     try {
-      const res = await fetch('http://localhost:3000/api/boms', {
+      const res = await fetch('http://localhost:5000/api/boms', {
         method: 'POST',
         headers: authHeaders(),
         body: JSON.stringify(bom)
@@ -164,7 +164,7 @@ export function AppProvider({ children }) {
   const addEco = useCallback(async (eco) => {
     try {
       const payload = { ...eco, createdBy: currentUser.id };
-      const res = await fetch('http://localhost:3000/api/ecos', {
+      const res = await fetch('http://localhost:5000/api/ecos', {
         method: 'POST',
         headers: authHeaders(),
         body: JSON.stringify(payload)
@@ -179,7 +179,7 @@ export function AppProvider({ children }) {
 
   const updateEcoStage = useCallback(async (ecoId, newStage, comment = '') => {
     try {
-      const res = await fetch(`http://localhost:3000/api/ecos/${ecoId}/stage`, {
+      const res = await fetch(`http://localhost:5000/api/ecos/${ecoId}/stage`, {
         method: 'PATCH',
         headers: authHeaders(),
         body: JSON.stringify({ stage: newStage, comment })
@@ -200,7 +200,7 @@ export function AppProvider({ children }) {
 
   const rejectEco = useCallback(async (ecoId, comment = '') => {
     try {
-      const res = await fetch(`http://localhost:3000/api/ecos/${ecoId}/reject`, {
+      const res = await fetch(`http://localhost:5000/api/ecos/${ecoId}/reject`, {
         method: 'POST',
         headers: authHeaders(),
         body: JSON.stringify({ comment })
@@ -214,7 +214,7 @@ export function AppProvider({ children }) {
 
   const updateEcoImages = useCallback(async (ecoId, images) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/ecos/${ecoId}/images`, {
+      const res = await fetch(`http://localhost:5000/api/ecos/${ecoId}/images`, {
         method: 'PATCH',
         headers: authHeaders(),
         body: JSON.stringify({ attachedImages: images, imageChanges: [] }) // imageChanges syncs based on existing architecture
@@ -228,7 +228,7 @@ export function AppProvider({ children }) {
 
   const reviewEcoImage = useCallback(async (ecoId, imageChangeId, status, comment) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/ecos/${ecoId}/images/review/${imageChangeId}`, {
+      const res = await fetch(`http://localhost:5000/api/ecos/${ecoId}/images/review/${imageChangeId}`, {
         method: 'PATCH',
         headers: authHeaders(),
         body: JSON.stringify({ status, comment })
@@ -242,7 +242,7 @@ export function AppProvider({ children }) {
 
   const markNotificationRead = useCallback(async (notifId) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/notifications/${notifId}/read`, {
+      const res = await fetch(`http://localhost:5000/api/notifications/${notifId}/read`, {
         method: 'PATCH',
         headers: authHeaders()
       });
@@ -250,6 +250,36 @@ export function AppProvider({ children }) {
         setNotificationList(prev => prev.map(n => n.id === notifId ? { ...n, read: true } : n));
       }
     } catch (err) { console.error('Error marking notification read', err); }
+  }, []);
+
+  const fetchPaginatedEcos = useCallback(async (params) => {
+    try {
+      const query = new URLSearchParams(params).toString();
+      const res = await fetch(`http://localhost:5000/api/ecos?${query}`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      return await res.json();
+    } catch (err) { return { success: false, message: err.message }; }
+  }, []);
+
+  const fetchPaginatedProducts = useCallback(async (params) => {
+    try {
+      const query = new URLSearchParams(params).toString();
+      const res = await fetch(`http://localhost:5000/api/products?${query}`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      return await res.json();
+    } catch (err) { return { success: false, message: err.message }; }
+  }, []);
+
+  const fetchPaginatedBoms = useCallback(async (params) => {
+    try {
+      const query = new URLSearchParams(params).toString();
+      const res = await fetch(`http://localhost:5000/api/boms?${query}`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      return await res.json();
+    } catch (err) { return { success: false, message: err.message }; }
   }, []);
 
   const value = {
@@ -270,6 +300,9 @@ export function AppProvider({ children }) {
     reviewEcoImage,
     notificationList,
     markNotificationRead,
+    fetchPaginatedEcos,
+    fetchPaginatedProducts,
+    fetchPaginatedBoms,
     canCreateEco,
     canEditDraft,
     canApprove,

@@ -222,7 +222,7 @@ export default function EcoDetail() {
                 onClick={() => handlePreviewImage(attachedImages, idx)}
                 className="group relative aspect-square bg-surface-50 rounded-xl border border-surface-200 overflow-hidden cursor-pointer hover:border-primary-300 transition-colors"
               >
-                <img src={img.url} alt={img.name} className="w-full h-full object-cover" />
+                <img src={img.url} alt={img.name} className="w-full h-full object-cover" loading="lazy" />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                   <span className="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">Preview</span>
                 </div>

@@ -71,7 +71,7 @@ export default function Navbar() {
 
         {/* Mobile Toggle */}
         <button 
-          className="md:hidden relative z-50 p-2 text-slate-300 hover:text-white"
+          className="md:hidden relative z-50 p-2 text-slate-800 hover:text-teal-600 transition-colors"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -79,27 +79,31 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         <div className={`
-          fixed inset-0 bg-[#EADBC8] z-40 transition-transform duration-300 ease-in-out md:hidden flex flex-col pt-24 px-6
-          ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}
+          fixed inset-0 bg-[#EADBC8] z-40 transition-transform duration-500 ease-in-out md:hidden flex flex-col pt-24 px-6
+          ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full underline'}
         `}>
-          <nav className="flex flex-col gap-6 text-xl font-semibold">
+          <nav className="flex flex-col gap-6 text-xl font-bold">
             {navLinks.map((link) => (
               <a 
                 key={link.label} 
                 href={link.href}
-                className="text-slate-900 hover:text-teal-600 border-b border-black/10 pb-4"
+                className="text-slate-800 hover:text-teal-600 border-b border-black/5 pb-4 transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {link.label}
               </a>
             ))}
           </nav>
-          <div className="mt-8 flex flex-col gap-4">
-            <Link to="/login" className="w-full py-4 text-center rounded-lg border border-white/20 text-white font-medium">
+          <div className="mt-10 flex flex-col gap-4">
+            <Link 
+              to="/login" 
+              className="w-full py-4 text-center rounded-xl bg-white/50 border border-black/5 text-slate-800 font-bold hover:bg-white/80 transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               Sign In
             </Link>
-            <Link to="/login">
-              <TealButton className="w-full py-4 justify-center" size="lg" glow>Get Started Now</TealButton>
+            <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+              <TealButton className="w-full py-4 justify-center text-lg italic shadow-xl" size="lg" glow>Get Started Now</TealButton>
             </Link>
           </div>
         </div>

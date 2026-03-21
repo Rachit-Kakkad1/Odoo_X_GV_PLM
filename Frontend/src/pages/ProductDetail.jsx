@@ -91,7 +91,7 @@ export default function ProductDetail() {
                 onClick={() => { setPreviewImages(product.images); setPreviewIndex(idx); }}
                 className="group relative aspect-[4/3] bg-surface-50 rounded-xl border border-surface-200 overflow-hidden cursor-pointer hover:border-primary-300 transition-colors"
               >
-                <img src={img.url} alt={img.name} className="w-full h-full object-cover" />
+                <img src={img.url} alt={img.name} className="w-full h-full object-cover" loading="lazy" />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                   <Eye size={20} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>

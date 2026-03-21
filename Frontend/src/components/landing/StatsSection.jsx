@@ -22,7 +22,7 @@ export default function StatsSection() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 mb-24 reveal-up">
           {stats.map((stat, i) => (
             <div key={i} className="text-center">
-              <div className="text-5xl md:text-6xl font-black text-gradient font-mono mb-2 truncate">
+              <div className="text-4xl md:text-6xl font-black text-gradient font-mono mb-2 truncate">
                 <AnimatedNumber value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
               </div>
               <p className="text-sm font-semibold text-slate-600 uppercase tracking-wider">{stat.label}</p>

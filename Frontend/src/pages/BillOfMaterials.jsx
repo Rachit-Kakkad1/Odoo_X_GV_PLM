@@ -1,18 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import StatusBadge from '../components/ui/StatusBadge';
 import EmptyState from '../components/ui/EmptyState';
-import { Search, Layers, ArrowUpRight, Plus } from 'lucide-react';
+import { Search, Layers, ArrowUpRight, Plus, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function BillOfMaterials() {
-  const { bomList, canCreateEco } = useApp();
+  const { fetchPaginatedBoms, canCreateEco } = useApp();
+  const [boms, setBoms] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
+  
+  // Pagination State
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalBoms, setTotalBoms] = useState(0);
+  const limit = 8;
 
-  const filtered = bomList.filter(b =>
-    b.name.toLowerCase().includes(search.toLowerCase()) || b.productName.toLowerCase().includes(search.toLowerCase())
-  );
+  const fetchBoms = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const data = await fetchPaginatedBoms({
+        page,
+        limit,
+        search
+      });
+      if (data.success) {
+        setBoms(data.data);
+        setTotalPages(data.totalPages);
+        setTotalBoms(data.total);
+      }
+    } catch (err) {
+      console.error('Failed to fetch BoMs', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [page, search, fetchPaginatedBoms]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      fetchBoms();
+    }, 400);
+    return () => clearTimeout(timeoutId);
+  }, [fetchBoms]);
+
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
 
   return (
     <div className="space-y-6">
@@ -43,10 +79,16 @@ export default function BillOfMaterials() {
         />
       </div>
 
-      {/* Table */}
-      {filtered.length === 0 ? (
+      {/* Table & Cards */}
+      {isLoading ? (
+        <div className="bg-surface-100 sm:rounded-xl sm:border border-surface-200 py-20 flex flex-col items-center justify-center space-y-4">
+          <Loader2 className="animate-spin text-primary-600" size={32} />
+          <p className="text-surface-500 font-medium">Loading Bills of Materials...</p>
+        </div>
+      ) : boms.length === 0 ? (
         <EmptyState title="No BoMs found" description="Try adjusting your search." icon={Layers} />
       ) : (
+        <>
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="bg-surface-100 sm:rounded-xl sm:border border-surface-200 overflow-hidden">
           {/* Desktop/Tablet Table View */}
           <div className="hidden sm:block overflow-x-auto w-full">
@@ -62,16 +104,16 @@ export default function BillOfMaterials() {
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-100">
-              {filtered.map((bom, idx) => (
+              {boms.map((bom, idx) => (
                 <motion.tr
-                  key={bom.id}
+                  key={bom.id || bom._id}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: idx * 0.05 }}
                   className="hover:bg-surface-50 transition-colors group"
                 >
                   <td className="px-6 py-4">
-                    <Link to={`/bom/${bom.id}`} className="text-sm font-medium text-surface-800 hover:text-primary-600 transition-colors">
+                    <Link to={`/bom/${bom.id || bom._id}`} className="text-sm font-medium text-surface-800 hover:text-primary-600 transition-colors">
                       {bom.name}
                     </Link>
                   </td>
@@ -82,13 +124,13 @@ export default function BillOfMaterials() {
                     <span className="text-sm font-semibold text-surface-700">v{bom.version}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-sm text-surface-500">{bom.components.length} parts</span>
+                    <span className="text-sm text-surface-500">{bom.components?.length || 0} parts</span>
                   </td>
                   <td className="px-6 py-4">
                     <StatusBadge status={bom.status} />
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <Link to={`/bom/${bom.id}`} className="opacity-0 group-hover:opacity-100 inline-flex items-center gap-1 text-xs font-medium text-primary-600 hover:text-primary-700 transition-all">
+                    <Link to={`/bom/${bom.id || bom._id}`} className="opacity-0 group-hover:opacity-100 inline-flex items-center gap-1 text-xs font-medium text-primary-600 hover:text-primary-700 transition-all">
                       View <ArrowUpRight size={12} />
                     </Link>
                   </td>
@@ -99,18 +141,18 @@ export default function BillOfMaterials() {
           </div>
 
           {/* Mobile Card View */}
-          <div className="grid grid-cols-1 gap-4 sm:hidden">
-            {filtered.map((bom, idx) => (
+          <div className="grid grid-cols-1 gap-4 sm:hidden p-4 bg-surface-50">
+            {boms.map((bom, idx) => (
               <motion.div
-                key={bom.id}
+                key={bom.id || bom._id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
-                className="bg-surface-100 border text-left border-surface-200 rounded-xl p-4 shadow-sm"
+                className="bg-white border text-left border-surface-200 rounded-xl p-4 shadow-sm"
               >
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <Link to={`/bom/${bom.id}`} className="text-base font-semibold text-primary-600 hover:text-primary-700">
+                    <Link to={`/bom/${bom.id || bom._id}`} className="text-base font-semibold text-surface-800 hover:text-primary-600">
                       {bom.name}
                     </Link>
                     <Link to={`/products/${bom.productId}`} className="block text-sm text-surface-500 hover:underline mt-0.5">
@@ -127,12 +169,12 @@ export default function BillOfMaterials() {
                   </div>
                   <div>
                     <p className="text-[10px] text-surface-400 font-semibold uppercase tracking-wider">Components</p>
-                    <p className="text-sm text-surface-700 font-medium">{bom.components.length} parts</p>
+                    <p className="text-sm text-surface-700 font-medium">{bom.components?.length || 0} parts</p>
                   </div>
                 </div>
 
                 <Link
-                  to={`/bom/${bom.id}`}
+                  to={`/bom/${bom.id || bom._id}`}
                   className="w-full inline-flex justify-center items-center gap-2 py-2.5 bg-surface-50 hover:bg-surface-100 text-surface-700 font-medium text-sm rounded-lg transition-colors border border-surface-200"
                 >
                   View BoM <ArrowUpRight size={14} />
@@ -140,8 +182,34 @@ export default function BillOfMaterials() {
               </motion.div>
             ))}
           </div>
-
         </motion.div>
+
+        {/* Pagination Controls */}
+        <div className="px-6 py-4 border-t border-surface-200 bg-surface-50 flex items-center justify-between rounded-xl shadow-sm mt-4">
+          <p className="text-sm text-surface-500">
+            Showing <span className="font-medium text-surface-800">{(page - 1) * limit + 1}</span> to <span className="font-medium text-surface-800">{Math.min(page * limit, totalBoms)}</span> of <span className="font-medium text-surface-800">{totalBoms}</span> BoMs
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="inline-flex items-center gap-1 px-3 py-1.5 border border-surface-300 rounded-lg text-sm font-medium text-surface-700 bg-white hover:bg-surface-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft size={16} /> Previous
+            </button>
+            <div className="px-3 py-1.5 text-sm font-medium text-surface-700">
+              Page {page} of {totalPages}
+            </div>
+            <button
+              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="inline-flex items-center gap-1 px-3 py-1.5 border border-surface-300 rounded-lg text-sm font-medium text-surface-700 bg-white hover:bg-surface-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Next <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+        </>
       )}
     </div>
   );

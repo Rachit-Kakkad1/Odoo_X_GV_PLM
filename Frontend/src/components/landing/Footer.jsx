@@ -44,13 +44,13 @@ export default function Footer() {
           <div className="md:col-span-4 lg:col-span-4">
             <h4 className="text-slate-900 font-bold mb-6">Subscribe to Engineering Weekly</h4>
             <p className="text-sm text-slate-600 mb-4">Latest insights on manufacturing workflows and PLM strategies. No spam.</p>
-            <form className="flex gap-2" onSubmit={e => e.preventDefault()}>
+            <form className="flex gap-2 w-full max-w-sm" onSubmit={e => e.preventDefault()}>
               <input 
                 type="email" 
                 placeholder="Enter your email" 
-                className="flex-1 bg-black/5 border border-black/10 rounded-lg px-4 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-teal-500/50"
+                className="flex-1 min-w-0 bg-black/5 border border-black/10 rounded-lg px-4 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-teal-500/50"
               />
-              <button type="submit" className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-bold transition-colors">
+              <button type="submit" className="bg-[#312E24] hover:bg-[#504A3C] text-white px-4 py-2 rounded-lg font-bold transition-colors flex-shrink-0">
                 <ArrowRight size={18} />
               </button>
             </form>

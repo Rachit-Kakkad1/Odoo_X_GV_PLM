@@ -83,7 +83,7 @@ export default function ImageDiffView({ imageChanges = [], canReview = false, on
                       change.changeType === 'removed' ? 'ring-2 ' + borderColors.removed : 'border-surface-200'
                     }`}
                   >
-                    <img src={change.oldImage.url} alt="Current" className="w-full h-full object-cover" />
+                    <img src={change.oldImage.url} alt="Current" className="w-full h-full object-cover" loading="lazy" />
                     {change.changeType === 'removed' && (
                       <div className="absolute inset-0 bg-danger-500/20 flex items-center justify-center">
                         <span className="px-3 py-1.5 bg-danger-600 text-white text-xs font-bold rounded-full">TO BE REMOVED</span>
@@ -110,7 +110,7 @@ export default function ImageDiffView({ imageChanges = [], canReview = false, on
                       borderColors[change.changeType] || borderColors.pending
                     }`}
                   >
-                    <img src={change.newImage.url} alt="Proposed" className="w-full h-full object-cover" />
+                    <img src={change.newImage.url} alt="Proposed" className="w-full h-full object-cover" loading="lazy" />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                       <Eye size={24} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
