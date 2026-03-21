@@ -10,12 +10,17 @@ router.get('/status', authMiddleware, (req, res) => {
     res.json({
       success: true,
       data: {
+        current: status.current,
         healthy: status.postgres.healthy,
+        postgres: {
+          healthy: status.postgres.healthy
+        },
         message: status.message,
         timestamp: new Date()
       }
     });
   } catch (error) {
+    console.error('[DB_STATUS_PROB]', error);
     res.status(500).json({ success: false, message: 'Failed to retrieve database status' });
   }
 });

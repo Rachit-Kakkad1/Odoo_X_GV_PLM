@@ -26,7 +26,7 @@ export default function EcoDetail() {
   const { t } = useTranslation();
   const { id } = useParams();
   const { ecoList, updateEcoStage, rejectEco, reviewEcoImage, canApprove, canEditDraft, currentUser, isReadOnly } = useApp();
-  const eco = ecoList.find(e => e.id === id);
+  const eco = ecoList.find(e => e?.id === id || e?._id === id);
   const [comment, setComment] = useState('');
   const [showConfirm, setShowConfirm] = useState(null);
   const [previewImages, setPreviewImages] = useState(null);
@@ -43,7 +43,7 @@ export default function EcoDetail() {
         });
         const json = await res.json();
         if (json.success && isMounted) {
-          const match = json.data.find(d => d.ecoId === eco?.id || d.ecoId === eco?._id);
+          const match = json.data.find(d => d?.ecoId === eco?.id || d?.ecoId === eco?._id);
           if (match) setSlaData(match);
         }
       } catch (err) { }
@@ -114,7 +114,7 @@ export default function EcoDetail() {
         <div className="flex flex-col md:flex-row items-start justify-between gap-4 md:gap-6 mb-4">
           <div className="w-full">
             <div className="flex items-center flex-wrap gap-2 mb-2">
-              <span className="text-sm font-mono text-surface-400">{eco.ecoNumber}</span>
+              <span className="text-sm font-mono text-surface-400">{eco.ecoNumber || eco.eco_number}</span>
               <StatusBadge status={eco.type} />
               <StatusBadge status={eco.priority} />
               {attachedImages.length > 0 && (
@@ -142,28 +142,28 @@ export default function EcoDetail() {
             <User size={14} className="text-surface-400" />
             <div>
               <p className="text-xs text-surface-400">{t('eco.created_by')}</p>
-              <p className="text-sm font-medium text-surface-700">{eco.createdByName}</p>
+              <p className="text-sm font-medium text-surface-700">{eco.createdByName || eco.creator_name}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <Calendar size={14} className="text-surface-400" />
             <div>
               <p className="text-xs text-surface-400">{t('eco.created')}</p>
-              <p className="text-sm font-medium text-surface-700">{eco.createdAt}</p>
+              <p className="text-sm font-medium text-surface-700">{eco.createdAt || eco.created_at}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <Clock size={14} className="text-surface-400" />
             <div>
               <p className="text-xs text-surface-400">{t('eco.effective_date')}</p>
-              <p className="text-sm font-medium text-surface-700">{eco.effectiveDate || '—'}</p>
+              <p className="text-sm font-medium text-surface-700">{eco.effectiveDate || eco.effective_date || '—'}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <FileText size={14} className="text-surface-400" />
             <div>
               <p className="text-xs text-surface-400">{t('eco.product')}</p>
-              <Link to={`/products/${eco.productId}`} className="text-sm font-medium text-primary-600 hover:underline">{eco.productName}</Link>
+              <Link to={`/products/${eco.productId || eco.product_id}`} className="text-sm font-medium text-primary-600 hover:underline">{eco.productName}</Link>
             </div>
           </div>
         </div>

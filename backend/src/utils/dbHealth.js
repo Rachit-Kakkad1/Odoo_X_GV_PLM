@@ -10,8 +10,12 @@ const checkHealth = async (queryFn) => {
     }
   } catch (err) {
     if (isDbHealthy) {
-      console.error('[HEALTH] ✗ Database connection lost. Switching to READ-ONLY FALLBACK.');
+      console.error('[HEALTH] ✗ Database connection lost. Error:', err.message);
+      if (err.code) console.error('[HEALTH] Error code:', err.code);
       isDbHealthy = false;
+    } else {
+      // Still unhealthy — log occasionally or just keep it false
+      // console.log('[HEALTH] DB still disconnected...');
     }
   }
 };
