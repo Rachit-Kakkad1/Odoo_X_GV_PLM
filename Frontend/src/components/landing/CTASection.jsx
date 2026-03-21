@@ -41,7 +41,7 @@ export default function CTASection() {
       
       <div className="relative z-10 max-w-4xl mx-auto text-center reveal-up">
         <p className="text-teal-600 font-bold uppercase tracking-widest text-sm mb-4">Ready to take control?</p>
-        <h2 className="text-5xl md:text-7xl font-black text-slate-900 mb-6 tracking-tight">
+        <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-slate-900 mb-6 tracking-tight">
           Stop losing money to uncontrolled changes.
         </h2>
         <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto">

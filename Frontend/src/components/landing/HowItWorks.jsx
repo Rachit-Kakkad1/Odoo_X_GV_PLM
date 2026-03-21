@@ -53,7 +53,7 @@ export default function HowItWorks() {
         
         <div className="text-center mb-16 reveal-up">
           <SectionBadge title="The Pipeline" />
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">How an ECO moves in PLM Flow.</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-slate-900">How an ECO moves in PLM Flow.</h2>
           <p className="text-slate-600 max-w-2xl mx-auto text-lg">
             A linear, unbreakable chain of custody from proposal to production.
           </p>

@@ -24,7 +24,7 @@ export default function FeaturesSection() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16 reveal-up">
           <SectionBadge title="Core Features" />
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">Everything an engineering team needs.</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-slate-900">Everything an engineering team needs.</h2>
           <p className="text-slate-600 max-w-2xl mx-auto text-lg">
             Purpose-built tools that replace generic task trackers and chaotic spreadsheets.
           </p>
@@ -39,8 +39,9 @@ export default function FeaturesSection() {
             </h3>
             <p className="text-sm text-slate-600 mb-8 max-w-md">Instantly visualize exactly what changed in a BoM line-by-line before approving anything.</p>
             
-            <div ref={diffRef} className="bg-white/40 rounded-xl border border-black/5 overflow-hidden font-mono text-[10px] sm:text-xs">
-              <div className="flex bg-black/5 px-4 py-2 text-slate-500 border-b border-black/5">
+            <div ref={diffRef} className="bg-white/40 rounded-xl border border-black/5 overflow-x-auto font-mono text-[10px] sm:text-xs">
+              <div className="min-w-[400px]">
+                <div className="flex bg-black/5 px-4 py-2 text-slate-500 border-b border-black/5">
                 <div className="w-1/3">Part No.</div>
                 <div className="w-1/3">Old Value</div>
                 <div className="w-1/3">New Value</div>
@@ -66,6 +67,7 @@ export default function FeaturesSection() {
               </div>
             </div>
           </div>
+        </div>
 
            {/* CARD 2: Version Control */}
           <div className="p-8 rounded-3xl border border-black/5 bg-white/40 backdrop-blur-md relative overflow-hidden group hover:border-teal-500/40 hover:shadow-[0_0_30px_rgba(13,148,136,0.1)] transition-all duration-300 reveal-up hover:-translate-y-1">

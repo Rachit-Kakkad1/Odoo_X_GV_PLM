@@ -67,7 +67,7 @@ export default function Login() {
           {/* Logo */}
           <div className="flex items-center gap-3 mb-10">
             <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center">
-              <img src="/logo.svg" alt="PLM Logo" className="w-full h-full object-contain" />
+              <img src="/logo.svg" alt="PLM Logo" className="w-full h-full object-contain" loading="lazy" />
             </div>
             <div className="flex flex-col justify-center">
               <span className="text-[20px] leading-none font-extrabold text-primary-900 tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>

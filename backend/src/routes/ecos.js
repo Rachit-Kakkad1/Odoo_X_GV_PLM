@@ -6,15 +6,43 @@ const roleMiddleware = require('../middleware/roles');
 
 const router = express.Router();
 
-// GET /api/ecos — List all ECOs
+// GET /api/ecos — List all ECOs (paginated)
 router.get('/', authMiddleware, async (req, res) => {
   try {
-    let query = {};
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const skip = (page - 1) * limit;
+
+    const query = {};
     if (req.user.role === 'Operations User') {
       query.stage = 'Done';
     }
-    const ecos = await ECO.find(query).sort({ createdAt: -1 });
-    res.json({ success: true, data: ecos });
+
+    if (req.query.search) {
+      query.$or = [
+        { title: { $regex: String(req.query.search), $options: 'i' } },
+        { ecoNumber: { $regex: String(req.query.search), $options: 'i' } },
+        { productName: { $regex: String(req.query.search), $options: 'i' } }
+      ];
+    }
+
+    if (req.query.stage && req.query.stage !== 'All') {
+      query.stage = String(req.query.stage);
+    }
+
+    const total = await ECO.countDocuments(query);
+    const ecos = await ECO.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.json({ 
+      success: true, 
+      data: ecos,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit) || 1
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Failed to fetch ECOs' });
   }
