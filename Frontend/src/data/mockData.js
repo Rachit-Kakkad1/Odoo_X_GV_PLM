@@ -7,6 +7,12 @@ export const ROLES = {
 
 export const ECO_STAGES = ['New', 'In Review', 'Approval', 'Done'];
 
+export const approvalRules = [
+  { id: 'ar1', name: 'High Priority Tech Review', conditions: 'Priority = High AND Category = Electronics', stage: 'In Review', requiredRole: 'Engineering User', status: 'Active' },
+  { id: 'ar2', name: 'Final Sign-off', conditions: 'Stage = Approval', stage: 'Approval', requiredRole: 'Approver', status: 'Active' },
+  { id: 'ar3', name: 'Cost Impact Review', conditions: 'Cost Change > $500', stage: 'Approval', requiredRole: 'Admin', status: 'Inactive' },
+];
+
 export const users = [
   { id: 'u1', name: 'Rishi Patel', email: 'rishi@plm.io', role: ROLES.ENGINEERING, avatar: 'RP' },
   { id: 'u2', name: 'Ananya Sharma', email: 'ananya@plm.io', role: ROLES.APPROVER, avatar: 'AS' },

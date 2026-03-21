@@ -14,6 +14,9 @@ import CreateEco from './pages/CreateEco';
 import EcoDetail from './pages/EcoDetail';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
+import UserManagement from './pages/UserManagement';
+import EcoStages from './pages/EcoStages';
+import ApprovalRules from './pages/ApprovalRules';
 import { AnimatePresence, motion } from 'framer-motion';
 
 function AnimatedRoutes() {
@@ -40,6 +43,9 @@ function AnimatedRoutes() {
           <Route path="/eco/:id" element={<EcoDetail />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/users" element={<UserManagement />} />
+          <Route path="/eco-stages" element={<EcoStages />} />
+          <Route path="/rules" element={<ApprovalRules />} />
         </Routes>
       </motion.div>
     </AnimatePresence>

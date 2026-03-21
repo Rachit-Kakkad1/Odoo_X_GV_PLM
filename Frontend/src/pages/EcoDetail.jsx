@@ -181,7 +181,7 @@ export default function EcoDetail() {
       )}
 
       {/* Action Buttons */}
-      {eco.stage !== 'Done' && (
+      {!isReadOnly && eco.stage !== 'Done' && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-surface-100 rounded-xl border border-surface-200 p-6">
           <h2 className="text-base font-semibold text-surface-800 mb-4">Actions</h2>
 
@@ -205,28 +205,32 @@ export default function EcoDetail() {
             {canEditDraft && (eco.stage === 'New' || eco.stage === 'In Review') && (
               <button
                 onClick={() => setShowConfirm('submit')}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors shadow-sm"
+                className="w-full flex items-center justify-center gap-2 px-4 py-4 bg-primary-600 text-white text-base font-bold rounded-xl hover:bg-primary-700 transition-colors shadow-sm"
               >
-                <Send size={16} /> Submit for Approval
+                <Send size={20} /> Submit for Approval Review
               </button>
             )}
 
             {/* Approve / Reject (Approver/Admin, stage is Approval) */}
             {canApprove && eco.stage === 'Approval' && (
-              <>
+              <div className="flex flex-col sm:flex-row gap-4 w-full mt-2">
                 <button
                   onClick={() => setShowConfirm('approve')}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-success-600 text-white text-sm font-medium rounded-lg hover:bg-success-700 transition-colors shadow-sm"
+                  className="flex-1 flex flex-col items-center justify-center gap-2 py-6 bg-success-50 text-success-700 hover:bg-success-600 hover:text-white border-2 border-success-200 hover:border-success-600 rounded-xl transition-all shadow-sm group"
                 >
-                  <CheckCircle size={16} /> Approve
+                  <CheckCircle size={32} className="group-hover:scale-110 transition-transform" />
+                  <span className="text-lg font-bold">Approve Request</span>
+                  <span className="text-xs font-medium opacity-80 text-center px-4">Apply these changes permanently to production</span>
                 </button>
                 <button
                   onClick={() => setShowConfirm('reject')}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-danger-600 text-white text-sm font-medium rounded-lg hover:bg-danger-700 transition-colors shadow-sm"
+                  className="flex-1 flex flex-col items-center justify-center gap-2 py-6 bg-danger-50 text-danger-700 hover:bg-danger-600 hover:text-white border-2 border-danger-200 hover:border-danger-600 rounded-xl transition-all shadow-sm group"
                 >
-                  <XCircle size={16} /> Reject
+                  <XCircle size={32} className="group-hover:scale-110 transition-transform" />
+                  <span className="text-lg font-bold">Reject Request</span>
+                  <span className="text-xs font-medium opacity-80 text-center px-4">Send back to Engineering for revisions</span>
                 </button>
-              </>
+              </div>
             )}
 
             {/* No action available info */}
