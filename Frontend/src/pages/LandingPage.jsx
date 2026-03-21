@@ -22,6 +22,14 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default function LandingPage() {
   useEffect(() => {
+    // Add landing-page class to body so scoped CSS applies
+    document.body.classList.add('landing-page')
+    return () => {
+      document.body.classList.remove('landing-page')
+    }
+  }, [])
+
+  useEffect(() => {
     // Only init animations if reduced motion is false
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReducedMotion) return

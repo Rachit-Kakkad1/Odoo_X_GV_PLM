@@ -7,16 +7,14 @@
 
 * { box-sizing: border-box; }
 
-html {
-  cursor: none;
-}
+/* NOTE: cursor:none is handled by CustomCursor.jsx via JS
+   Do NOT add cursor:none here — it leaks to dashboard/login */
 
 body.landing-page {
   background: #EADBC8;
   color: #0F172A;
   font-family: 'Inter', system-ui, sans-serif;
   overflow-x: hidden;
-  cursor: none;
 }
 
 .glass {

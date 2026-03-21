@@ -6,6 +6,16 @@ export default function CustomCursor() {
   const ringRef = useRef()
   const ringPos = useRef({ x: 0, y: 0 })
 
+  // Hide default cursor ONLY while this component is mounted (landing page)
+  // Automatically restores normal cursor when navigating away
+  useEffect(() => {
+    document.documentElement.style.cursor = 'none'
+    document.body.style.cursor = 'none'
+    return () => {
+      document.documentElement.style.cursor = ''
+      document.body.style.cursor = ''
+    }
+  }, [])
   useEffect(() => {
     let animationFrameId
     const render = () => {
