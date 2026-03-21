@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, Layers, FileText, BarChart3, Settings, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { LayoutDashboard, Package, Layers, FileText, BarChart3, Settings, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -13,28 +13,63 @@ const navItems = [
   { to: '/settings', icon: Settings, label: 'Settings', adminOnly: true },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ mobileMenuOpen, setMobileMenuOpen }) {
   const [collapsed, setCollapsed] = useState(false);
   const { canAccessSettings } = useApp();
   const location = useLocation();
 
   const filteredNav = navItems.filter(item => !item.adminOnly || canAccessSettings);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname, setMobileMenuOpen]);
+
+  // Handle resize specifically for clearing mobile menu state
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [setMobileMenuOpen]);
+
   return (
-    <motion.aside
-      initial={false}
-      animate={{ width: collapsed ? 72 : 256 }}
-      transition={{ duration: 0.25, ease: 'easeInOut' }}
-      className="fixed left-0 top-0 h-screen bg-white border-r border-surface-200 z-40 flex flex-col shadow-sm"
-    >
+    <>
+      {/* Mobile Backdrop */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setMobileMenuOpen(false)}
+            className="fixed inset-0 bg-surface-900/40 z-40 md:hidden"
+          />
+        )}
+      </AnimatePresence>
+
+      <motion.aside
+        initial={false}
+        animate={{ 
+          width: collapsed ? 72 : 256,
+          x: mobileMenuOpen ? 0 : (window.innerWidth < 768 ? -256 : 0)
+        }}
+        transition={{ duration: 0.25, ease: 'easeInOut' }}
+        className="fixed left-0 top-0 h-[100dvh] bg-white border-r border-surface-200 z-50 flex flex-col shadow-xl md:shadow-sm"
+        style={{ transform: window.innerWidth < 768 && !mobileMenuOpen ? 'translateX(-100%)' : 'none' }}
+      >
       {/* Logo */}
-      <div className="h-16 flex items-center px-5 border-b border-surface-200">
+      <div className="h-16 flex items-center justify-between px-5 border-b border-surface-200">
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center flex-shrink-0">
             <span className="text-white font-bold text-sm">P</span>
           </div>
           <AnimatePresence>
-            {!collapsed && (
+            {(!collapsed || mobileMenuOpen) && (
               <motion.div
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: 'auto' }}
@@ -48,6 +83,14 @@ export default function Sidebar() {
             )}
           </AnimatePresence>
         </div>
+        
+        {/* Mobile Close Button */}
+        <button 
+          onClick={() => setMobileMenuOpen(false)}
+          className="md:hidden p-1.5 -mr-2 text-surface-400 hover:text-surface-600 hover:bg-surface-50 rounded-lg"
+        >
+          <X size={20} />
+        </button>
       </div>
 
       {/* Nav */}
@@ -68,7 +111,7 @@ export default function Sidebar() {
             >
               <Icon size={20} className={`flex-shrink-0 transition-colors ${isActive ? 'text-primary-600' : 'text-surface-400 group-hover:text-surface-600'}`} />
               <AnimatePresence>
-                {!collapsed && (
+                {(!collapsed || mobileMenuOpen) && (
                   <motion.span
                     initial={{ opacity: 0, width: 0 }}
                     animate={{ opacity: 1, width: 'auto' }}
@@ -85,8 +128,8 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Collapse Toggle */}
-      <div className="p-3 border-t border-surface-200">
+      {/* Collapse Toggle (Desktop Only) */}
+      <div className="p-3 border-t border-surface-200 hidden md:block">
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-surface-400 hover:text-surface-600 hover:bg-surface-50 transition-colors"
@@ -107,5 +150,6 @@ export default function Sidebar() {
         </button>
       </div>
     </motion.aside>
+    </>
   );
 }

@@ -82,7 +82,8 @@ export default function EcoList() {
         />
       ) : (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-xl border border-surface-200 overflow-hidden">
-          <table className="w-full">
+          <div className="overflow-x-auto w-full">
+            <table className="w-full min-w-[1000px]">
             <thead>
               <tr className="bg-surface-50 border-b border-surface-200">
                 <th className="text-left px-6 py-3 text-xs font-semibold text-surface-400 uppercase tracking-wider">ECO Number</th>
@@ -141,6 +142,7 @@ export default function EcoList() {
               ))}
             </tbody>
           </table>
+          </div>
         </motion.div>
       )}
     </div>

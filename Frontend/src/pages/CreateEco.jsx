@@ -227,7 +227,8 @@ export default function CreateEco() {
             </button>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3 overflow-x-auto">
+            <div className="min-w-[600px] space-y-3 pb-2">
             {changes.map((change, idx) => (
               <div key={idx} className="grid grid-cols-12 gap-3 items-end">
                 <div className="col-span-3">
@@ -281,6 +282,7 @@ export default function CreateEco() {
                 </div>
               </div>
             ))}
+            </div>
           </div>
         </motion.div>
 

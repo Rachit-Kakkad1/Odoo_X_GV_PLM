@@ -12,7 +12,8 @@ export default function DiffView({ changes }) {
   return (
     <div className="space-y-3">
       <h3 className="text-sm font-semibold text-surface-700 uppercase tracking-wider">Changes</h3>
-      <div className="border border-surface-200 rounded-xl overflow-hidden">
+      <div className="border border-surface-200 rounded-xl overflow-hidden overflow-x-auto">
+        <div className="min-w-[600px]">
         {/* Header */}
         <div className="grid grid-cols-12 bg-surface-50 border-b border-surface-200 px-4 py-2.5">
           <div className="col-span-1 text-xs font-semibold text-surface-400 uppercase">Type</div>
@@ -47,6 +48,7 @@ export default function DiffView({ changes }) {
             </div>
           );
         })}
+        </div>
       </div>
     </div>
   );

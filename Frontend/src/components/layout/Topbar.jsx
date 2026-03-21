@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { Bell, Search, ChevronDown, Check } from 'lucide-react';
+import { Bell, Search, ChevronDown, Check, Menu } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useNavigate } from 'react-router-dom';
 import { users } from '../../data/mockData';
 
-export default function Topbar() {
+export default function Topbar({ setMobileMenuOpen }) {
   const { currentUser, switchRole, notificationList, markNotificationRead } = useApp();
   const [showNotif, setShowNotif] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -32,21 +32,31 @@ export default function Topbar() {
   };
 
   return (
-    <header className="h-16 bg-white border-b border-surface-200 flex items-center justify-between px-6 sticky top-0 z-30">
-      {/* Search */}
-      <div className="relative w-96">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search products, BoMs, ECOs..."
-          className="w-full pl-10 pr-4 py-2 rounded-lg border border-surface-200 bg-surface-50 text-sm text-surface-700 placeholder:text-surface-400 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-400 transition-all"
-        />
+    <header className="h-16 bg-white border-b border-surface-200 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
+      <div className="flex items-center gap-3 w-full max-w-md">
+        {/* Mobile Menu Toggle */}
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          className="md:hidden p-2 -ml-2 text-surface-500 hover:bg-surface-50 rounded-lg"
+        >
+          <Menu size={20} />
+        </button>
+
+        {/* Search */}
+        <div className="relative flex-1">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search products, BoMs..."
+            className="w-full pl-10 pr-4 py-2 rounded-lg border border-surface-200 bg-surface-50 text-sm text-surface-700 placeholder:text-surface-400 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-400 transition-all"
+          />
+        </div>
       </div>
 
       {/* Right side */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4 ml-4">
         {/* Notifications */}
         <div className="relative" ref={notifRef}>
           <button

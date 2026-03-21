@@ -71,8 +71,8 @@ export default function ImageDiffView({ imageChanges = [], canReview = false, on
               )}
             </div>
 
-            {/* Side-by-side Comparison */}
-            <div className="grid grid-cols-2 gap-0 divide-x divide-surface-200">
+            {/* Side-by-side or Stacked Comparison */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-surface-200">
               {/* Old Image */}
               <div className="p-4">
                 <p className="text-xs font-semibold text-surface-400 uppercase mb-3">Current Version</p>
