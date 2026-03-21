@@ -1,3 +1,9 @@
+// ============================================================//
+//  DiffView.jsx — CHANGE COMPARISON TABLE                     //
+//  Shows old vs new values in color-coded grid                //
+//  Green = Added, Red = Removed, Amber = Modified             //
+//  Used inside EcoDetail.jsx to display ECO changes           //
+// ============================================================//
 import { Plus, Minus, Pencil } from 'lucide-react';
 
 const typeConfig = {

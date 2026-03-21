@@ -1,3 +1,8 @@
+// ============================================================//
+//  LandingPage.jsx \u2014 MARKETING LANDING PAGE                   //
+//  Sections: Hero, Problem, HowItWorks, Features,             //
+//  Stats, Roles, CTA, Footer + GSAP ScrollTrigger animations //
+// ============================================================//
 import { useEffect } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'

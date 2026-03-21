@@ -1,3 +1,8 @@
+// ============================================================//
+//  CreateEco.jsx — ECO CREATION FORM                          //
+//  Multi-section: Info, Change Details, Images                //
+//  Role-gated: Only Engineers + Admins can access             //
+// ============================================================//
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
@@ -9,6 +14,9 @@ export default function CreateEco() {
   const { products, bomList, addEco, canCreateEco } = useApp();
   const navigate = useNavigate();
 
+  // ==========================================//
+  //  FORM STATE — All ECO form fields         //
+  // ==========================================//
   const [form, setForm] = useState({
     title: '',
     type: 'Product',
@@ -26,6 +34,9 @@ export default function CreateEco() {
 
   const [uploadedImages, setUploadedImages] = useState([]);
 
+  // ==========================================//
+  //  ROLE GATE — Block non-engineers          //
+  // ==========================================//
   if (!canCreateEco) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-center">
@@ -51,6 +62,9 @@ export default function CreateEco() {
     setChanges(prev => prev.map((c, i) => i === idx ? { ...c, [key]: value } : c));
   };
 
+  // ==========================================//
+  //  SUBMIT HANDLER — Validates + creates ECO //
+  // ==========================================//
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.title || !form.productId) return;

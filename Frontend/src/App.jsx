@@ -1,3 +1,8 @@
+// ============================================================//
+//  App.jsx — ROOT FILE: All routes + layout wrapper           //
+//  Landing page at '/' bypasses sidebar layout                //
+//  15 routes total, animated with Framer Motion               //
+// ============================================================//
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
@@ -22,6 +27,10 @@ import ApprovalRules from './pages/ApprovalRules';
 import { useApp } from './context/AppContext';
 import { AnimatePresence, motion } from 'framer-motion';
 
+// ==========================================//
+//  ANIMATED ROUTES — Page transitions       //
+//  Uses AnimatePresence for smooth swaps    //
+// ==========================================//
 function AnimatedRoutes() {
   const location = useLocation();
 
@@ -55,6 +64,10 @@ function AnimatedRoutes() {
   );
 }
 
+// ==========================================//
+//  APP LAYOUT — Sidebar + Topbar wrapper    //
+//  Skips layout for '/' and '/login'        //
+// ==========================================//
 function AppLayout() {
   const { isAuthenticated } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -98,6 +111,9 @@ function AppLayout() {
   );
 }
 
+// ==========================================//
+//  APP ROOT — Router + AppProvider          //
+// ==========================================//
 export default function App() {
   return (
     <Router>

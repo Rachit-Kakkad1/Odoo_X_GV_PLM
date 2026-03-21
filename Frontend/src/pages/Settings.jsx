@@ -1,3 +1,8 @@
+// ============================================================//
+//  Settings.jsx — ADMIN ONLY SETTINGS PAGE                    //
+//  ECO workflow stages editor + approval rules toggles        //
+//  Role gate: shows "Admin Access Required" for non-admins    //
+// ============================================================//
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { ECO_STAGES } from '../data/mockData';

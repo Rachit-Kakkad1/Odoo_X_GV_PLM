@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+// ============================================================//
+//  Reports.jsx \u2014 ANALYTICS & REPORTS PAGE                     //
+//  ECO distribution chart (Recharts), history tables          //
+//  Tabs: ECO History, Product Versions, BoM Changes           //
+// ============================================================//
 import { useApp } from '../context/AppContext';
 import StatusBadge from '../components/ui/StatusBadge';
 import DiffView from '../components/ui/DiffView';

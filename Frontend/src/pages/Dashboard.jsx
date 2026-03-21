@@ -1,3 +1,8 @@
+// ============================================================//
+//  Dashboard.jsx — ROLE-BASED DASHBOARD ROUTER                //
+//  switch(currentUser.role) renders different dashboards      //
+//  Admin / Engineering / Approver / Operations                //
+// ============================================================//
 import { useApp } from '../context/AppContext';
 import AdminDashboard from './dashboards/AdminDashboard';
 import EngineeringDashboard from './dashboards/EngineeringDashboard';

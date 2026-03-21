@@ -1,3 +1,8 @@
+// ============================================================//
+//  EcoDetail.jsx — MOST COMPLEX PAGE                          //
+//  Shows ECO header, stage progress, diff view,               //
+//  image changes, approve/reject buttons, approval logs       //
+// ============================================================//
 import { useParams, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import StatusBadge from '../components/ui/StatusBadge';
@@ -33,18 +38,27 @@ export default function EcoDetail() {
     ? imageChanges.filter(ic => ic.reviewStatus === 'approved')
     : imageChanges;
 
+  // ==========================================//
+  //  SUBMIT — Sends ECO to approval stage     //
+  // ==========================================//
   const handleSubmitForApproval = () => {
     updateEcoStage(eco.id, 'Approval', comment || 'Submitted for approval review.');
     setComment('');
     setShowConfirm(null);
   };
 
+  // ==========================================//
+  //  APPROVE — Moves ECO to 'Done' stage      //
+  // ==========================================//
   const handleApprove = () => {
     updateEcoStage(eco.id, 'Done', comment || 'Approved. Changes applied to production.');
     setComment('');
     setShowConfirm(null);
   };
 
+  // ==========================================//
+  //  REJECT — Resets ECO back to 'New'        //
+  // ==========================================//
   const handleReject = () => {
     rejectEco(eco.id, comment || 'Rejected. Changes need revision.');
     setComment('');
@@ -181,6 +195,10 @@ export default function EcoDetail() {
       )}
 
       {/* Action Buttons */}
+      {/* ======================================== */}
+      {/* ACTION BUTTONS — Role + Stage gated       */}
+      {/* Engineer: Submit | Approver: Approve/Reject */}
+      {/* ======================================== */}
       {!isReadOnly && eco.stage !== 'Done' && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-surface-100 rounded-xl border border-surface-200 p-6">
           <h2 className="text-base font-semibold text-surface-800 mb-4">Actions</h2>

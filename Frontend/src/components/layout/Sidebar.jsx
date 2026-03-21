@@ -1,9 +1,21 @@
+// ============================================================//
+//  Sidebar.jsx — ROLE-FILTERED NAVIGATION                     //
+//  Each role sees different menu items                         //
+//  roleNavMap object on line ~10 controls what each role sees  //
+// ============================================================//
 import { NavLink, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Package, Layers, FileText, BarChart3, Settings, ChevronLeft, ChevronRight, X, Hexagon, Inbox, Users, GitMerge, ShieldCheck, PlusCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// ==========================================//
+//  ROLE NAV MAP — Different menu per role   //
+//  Admin: settings, users, stages, rules    //
+//  Engineer: products, boms, create ECO     //
+//  Approver: pending approvals, reports     //
+//  Operations: products/boms (active only)  //
+// ==========================================//
 const roleNavMap = {
   'Admin': [
     { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },

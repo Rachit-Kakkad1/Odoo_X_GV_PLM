@@ -1,3 +1,8 @@
+// ============================================================//
+//  Products.jsx — PRODUCT LISTING PAGE                        //
+//  Search + status filter (All/Active/Archived)               //
+//  Operations users only see Active products (isReadOnly)     //
+// ============================================================//
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';

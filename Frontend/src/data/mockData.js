@@ -1,3 +1,12 @@
+// ============================================================//
+//  mockData.js — THE FAKE DATABASE                            //
+//  All sample data: users, products, boms, ecos, notifs       //
+//  This mimics what the real backend API would return          //
+// ============================================================//
+
+// ==========================================//
+//  ROLES — 4 user roles in the system       //
+// ==========================================//
 export const ROLES = {
   ENGINEERING: 'Engineering User',
   APPROVER: 'Approver',
@@ -13,6 +22,9 @@ export const approvalRules = [
   { id: 'ar3', name: 'Cost Impact Review', conditions: 'Cost Change > $500', stage: 'Approval', requiredRole: 'Admin', status: 'Inactive' },
 ];
 
+// ==========================================//
+//  USERS — 4 demo users (one per role)      //
+// ==========================================//
 export const users = [
   { id: 'u1', name: 'Rishi Patel', email: 'rishi@plm.io', role: ROLES.ENGINEERING, avatar: 'RP' },
   { id: 'u2', name: 'Ananya Sharma', email: 'ananya@plm.io', role: ROLES.APPROVER, avatar: 'AS' },
@@ -20,6 +32,11 @@ export const users = [
   { id: 'u4', name: 'Priya Mehta', email: 'priya@plm.io', role: ROLES.ADMIN, avatar: 'PM' },
 ];
 
+// ==========================================//
+//  PRODUCTS — 6 products with versions      //
+//  Each has: id, name, sku, version,        //
+//  status, category, versions[] array       //
+// ==========================================//
 export const products = [
   {
     id: 'p1',
@@ -147,6 +164,10 @@ export const products = [
   },
 ];
 
+// ==========================================//
+//  BOMS — Bills of Materials                //
+//  Each has: components[], operations[]     //
+// ==========================================//
 export const boms = [
   {
     id: 'b1',
@@ -254,6 +275,11 @@ export const boms = [
   },
 ];
 
+// ==========================================//
+//  ECOS — Engineering Change Orders         //
+//  Each has: changes[], approvalLogs[],     //
+//  imageChanges[], attachedImages[]         //
+// ==========================================//
 export const ecos = [
   {
     id: 'eco1',
@@ -410,6 +436,9 @@ export const activityTimeline = [
   { id: 'a8', type: 'product_updated', title: 'Electronic Control Unit Updated', description: 'Version 2.0 released with ARM upgrade', timestamp: '2025-10-05 14:00', user: 'Rishi Patel', ecoId: null },
 ];
 
+// ==========================================//
+//  NOTIFICATIONS — Bell icon data           //
+// ==========================================//
 export const notifications = [
   { id: 'n1', title: 'ECO-2026-002 awaiting your approval', type: 'approval', ecoId: 'eco2', read: false, timestamp: '2026-03-12 09:30' },
   { id: 'n2', title: 'ECO-2026-004 submitted for review', type: 'review', ecoId: 'eco4', read: false, timestamp: '2026-03-16 11:00' },

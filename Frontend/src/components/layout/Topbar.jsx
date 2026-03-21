@@ -1,3 +1,8 @@
+// ============================================================//
+//  Topbar.jsx — HEADER: Search + Notifications + Role Switch  //
+//  Bell icon with unread count badge                          //
+//  Avatar dropdown to switch roles (demo feature)             //
+// ============================================================//
 import { useState, useRef, useEffect } from 'react';
 import { Bell, Search, ChevronDown, Check, Menu } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
@@ -68,6 +73,10 @@ export default function Topbar({ setMobileMenuOpen }) {
           <Search size={20} />
         </button>
         {/* Notifications */}
+        {/* ======================================== */}
+        {/* NOTIFICATIONS — Bell icon + dropdown      */}
+        {/* Shows unread count badge                   */}
+        {/* ======================================== */}
         <div className="relative" ref={notifRef}>
           <button
             onClick={() => setShowNotif(!showNotif)}
@@ -113,6 +122,10 @@ export default function Topbar({ setMobileMenuOpen }) {
         </div>
 
         {/* User / Role Switcher */}
+        {/* ======================================== */}
+        {/* ROLE SWITCHER — Click to change user      */}
+        {/* Shows all 4 demo users to swap between    */}
+        {/* ======================================== */}
         <div className="relative" ref={userRef}>
           <button
             onClick={() => setShowUserMenu(!showUserMenu)}

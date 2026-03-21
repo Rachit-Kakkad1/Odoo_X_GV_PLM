@@ -1,9 +1,19 @@
+// ============================================================//
+//  AppContext.jsx — THE BRAIN OF THE APP                      //
+//  ALL state + ALL business logic lives here                  //
+//  Every page calls useApp() to access this data              //
+// ============================================================//
+
 import { createContext, useContext, useState, useCallback } from 'react';
 import { users, products as initialProducts, boms as initialBoms, ecos as initialEcos, notifications as initialNotifications, ROLES } from '../data/mockData';
 
 const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
+
+  // ================================//
+  //  GLOBAL STATE — All app data    //
+  // ================================//
   const [currentUser, setCurrentUser] = useState(users[0]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [products] = useState(initialProducts);
@@ -11,11 +21,17 @@ export function AppProvider({ children }) {
   const [ecoList, setEcoList] = useState(initialEcos);
   const [notificationList, setNotificationList] = useState(initialNotifications);
 
+  // ================================//
+  //  ROLE SWITCHER (demo feature)   //
+  // ================================//
   const switchRole = useCallback((userId) => {
     const user = users.find(u => u.id === userId);
     if (user) setCurrentUser(user);
   }, []);
 
+  // ==========================================//
+  //  LOGIN / LOGOUT — Auth state              //
+  // ==========================================//
   const login = useCallback((userId) => {
     switchRole(userId);
     setIsAuthenticated(true);
@@ -25,12 +41,19 @@ export function AppProvider({ children }) {
     setIsAuthenticated(false);
   }, []);
 
+  // ===========================================//
+  //  PERMISSION FLAGS — Role-based access      //
+  //  These control what UI each role can see    //
+  // ===========================================//
   const canCreateEco = currentUser.role === ROLES.ENGINEERING || currentUser.role === ROLES.ADMIN;
   const canEditDraft = currentUser.role === ROLES.ENGINEERING || currentUser.role === ROLES.ADMIN;
   const canApprove = currentUser.role === ROLES.APPROVER || currentUser.role === ROLES.ADMIN;
   const canAccessSettings = currentUser.role === ROLES.ADMIN;
   const isReadOnly = currentUser.role === ROLES.OPERATIONS;
 
+  // ================================//
+  //  ADD BOM — Create new BoM       //
+  // ================================//
   const addBom = useCallback((bom) => {
     const newBom = {
       ...bom,
@@ -49,6 +72,9 @@ export function AppProvider({ children }) {
     return newBom;
   }, []);
 
+  // ==========================================//
+  //  ADD ECO — Create new ECO (auto-numbers)  //
+  // ==========================================//
   const addEco = useCallback((eco) => {
     const newEco = {
       ...eco,
@@ -66,6 +92,10 @@ export function AppProvider({ children }) {
     return newEco;
   }, [currentUser, ecoList.length]);
 
+  // ===============================================//
+  //  UPDATE ECO STAGE — Used for BOTH              //
+  //  Submit for Approval AND Approve                //
+  // ===============================================//
   const updateEcoStage = useCallback((ecoId, newStage, comment = '') => {
     setEcoList(prev => prev.map(eco => {
       if (eco.id !== ecoId) return eco;
@@ -79,6 +109,9 @@ export function AppProvider({ children }) {
     }));
   }, [currentUser]);
 
+  // ==========================================//
+  //  REJECT ECO — Resets stage back to 'New'  //
+  // ==========================================//
   const rejectEco = useCallback((ecoId, comment = '') => {
     setEcoList(prev => prev.map(eco => {
       if (eco.id !== ecoId) return eco;
@@ -98,6 +131,9 @@ export function AppProvider({ children }) {
     ));
   }, []);
 
+  // ==========================================//
+  //  REVIEW IMAGE — Approve/Reject images     //
+  // ==========================================//
   const reviewEcoImage = useCallback((ecoId, imageChangeId, status, comment) => {
     setEcoList(prev => prev.map(eco => {
       if (eco.id !== ecoId) return eco;
@@ -108,10 +144,16 @@ export function AppProvider({ children }) {
     }));
   }, [currentUser]);
 
+  // ==========================================//
+  //  NOTIFICATIONS — Mark as read             //
+  // ==========================================//
   const markNotificationRead = useCallback((notifId) => {
     setNotificationList(prev => prev.map(n => n.id === notifId ? { ...n, read: true } : n));
   }, []);
 
+  // ==========================================//
+  //  CONTEXT VALUE — Everything exported      //
+  // ==========================================//
   const value = {
     isAuthenticated,
     login,
@@ -140,6 +182,10 @@ export function AppProvider({ children }) {
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
 
+// ==========================================//
+//  useApp() — Hook to access this context   //
+//  Call this in any component to get data   //
+// ==========================================//
 export function useApp() {
   const ctx = useContext(AppContext);
   if (!ctx) throw new Error('useApp must be used inside AppProvider');

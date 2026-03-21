@@ -1,3 +1,8 @@
+// ============================================================//
+//  EcoList.jsx — ECO LISTING PAGE                             //
+//  Search bar + stage filter + table with desktop/mobile view //
+//  "New ECO" button only shows if canCreateEco === true       //
+// ============================================================//
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
