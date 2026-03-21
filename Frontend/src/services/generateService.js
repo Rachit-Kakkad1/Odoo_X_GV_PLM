@@ -4,7 +4,7 @@
 // ============================================================//
 import { secureGet } from '../capacitor/nativeServices';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = '${API_BASE_URL}';
 
 /**
  * Sends ECO + changes to backend, returns a professional description string.
@@ -12,15 +12,14 @@ const API_BASE = 'http://localhost:5000/api';
  * @param {Array}  changes — Array of { field, oldValue, newValue, type }
  * @returns {Promise<string>} Generated description text
  */
-export async function generateDescription(eco, changes) {
-  const token = await secureGet('token');
-  const res = await fetch(`${API_BASE}/generate/description`, {
+export const generateDescription = async (token, type, title) => {
+  const res = await fetch(`${API_BASE_URL}/generate`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
+      'Authorization': `Bearer ${token}`
     },
-    body: JSON.stringify({ eco, changes })
+    body: JSON.stringify({ type, title })
   });
 
   const data = await res.json();

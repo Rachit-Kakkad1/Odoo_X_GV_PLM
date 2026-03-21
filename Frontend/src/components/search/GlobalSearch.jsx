@@ -4,6 +4,7 @@ import { Search, X, FileText, Package, Layers, ArrowRight, Loader2 } from 'lucid
 import { useDebounce } from '../../hooks/useDebounce';
 import { secureGet } from '../../capacitor/nativeServices';
 import { useTranslation } from 'react-i18next';
+import { API_BASE_URL } from '../../config/api';
 
 export default function GlobalSearch({ open, setOpen }) {
   const [query, setQuery] = useState('');
@@ -48,7 +49,7 @@ export default function GlobalSearch({ open, setOpen }) {
       try {
         const token = await secureGet('token');
         const res = await fetch(
-          `http://localhost:5000/api/search?q=${encodeURIComponent(debouncedQuery)}`,
+          `${API_BASE_URL}/search?q=${encodeURIComponent(debouncedQuery)}`,
           { headers: { 'Authorization': `Bearer ${token}` } }
         );
         const data = await res.json();

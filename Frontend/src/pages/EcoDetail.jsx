@@ -15,7 +15,8 @@ import SLATimer from '../components/ECO/SLATimer';
 import ExportPDFButton from '../components/ECO/ExportPDFButton';
 import RiskAnalyzer from '../components/ECO/RiskAnalyzer';
 import QRCodeModal from '../components/ECO/QRCodeModal';
-import { ArrowLeft, User, Calendar, FileText, Clock, CheckCircle, XCircle, Send, AlertCircle, MessageSquare, ImageIcon, Paperclip } from 'lucide-react';
+import { ArrowLeft, User, Calendar, FileText, Clock, CheckCircle, XCircle, Send, AlertCircle, MessageSquare, ImageIcon, Paperclip, History, Image, Download, Hash, ChevronRight, X, ExternalLink, QrCode } from 'lucide-react';
+import { API_BASE_URL } from '../config/api';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { secureGet } from '../capacitor/nativeServices';
@@ -37,7 +38,7 @@ export default function EcoDetail() {
     const fetchSla = async () => {
       try {
         const token = await secureGet('token');
-        const res = await fetch('http://localhost:5000/api/ecos/sla/status', {
+        const res = await fetch('${API_BASE_URL}/ecos/sla/status', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const json = await res.json();

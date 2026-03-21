@@ -8,6 +8,7 @@ import { createContext, useContext, useState, useCallback, useEffect } from 'rea
 import { users, products as initialProducts, boms as initialBoms, ecos as initialEcos, notifications as initialNotifications, ROLES } from '../data/mockData';
 import { secureSet, secureGet, secureRemove } from '../capacitor/nativeServices';
 import i18n from '../i18n/index';
+import { API_BASE_URL } from '../config/api';
 
 const AppContext = createContext(null);
 
@@ -35,7 +36,7 @@ export function AppProvider({ children }) {
   const fetchAllData = useCallback(async (token) => {
     try {
       const headers = { 'Authorization': `Bearer ${token}` };
-      const apiBase = 'http://localhost:5000/api';
+      const apiBase = '${API_BASE_URL}';
       
       const [prodRes, bomRes, ecoRes, notifRes] = await Promise.all([
         fetch(`${apiBase}/products`, { headers }),
@@ -66,7 +67,7 @@ export function AppProvider({ children }) {
   // ==========================================//
   const login = useCallback(async (email, password) => {
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
+      const res = await fetch('${API_BASE_URL}/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -87,7 +88,7 @@ export function AppProvider({ children }) {
         fetchAllData(data.data.token);
         
         // Fetch language preset
-        fetch('http://localhost:5000/api/preferences', {
+        fetch('${API_BASE_URL}/preferences', {
           headers: { 'Authorization': `Bearer ${data.data.token}` }
         })
         .then(r => r.json())
@@ -127,7 +128,7 @@ export function AppProvider({ children }) {
         return;
       }
       try {
-        const res = await fetch('http://localhost:5000/api/auth/me', {
+        const res = await fetch('${API_BASE_URL}/auth/me', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
@@ -143,7 +144,7 @@ export function AppProvider({ children }) {
           fetchAllData(token);
 
           // Fetch language preset
-          fetch('http://localhost:5000/api/preferences', {
+          fetch('${API_BASE_URL}/preferences', {
             headers: { 'Authorization': `Bearer ${token}` }
           })
           .then(r => r.json())
@@ -177,7 +178,7 @@ export function AppProvider({ children }) {
       if (!token) return;
       try {
         const headers = { 'Authorization': `Bearer ${token}` };
-        const apiBase = 'http://localhost:5000/api';
+        const apiBase = '${API_BASE_URL}';
 
         const [notifRes, ecoRes] = await Promise.all([
           fetch(`${apiBase}/notifications`, { headers }),
@@ -216,7 +217,7 @@ export function AppProvider({ children }) {
 
   const addBom = useCallback(async (bom) => {
     try {
-      const res = await fetch('http://localhost:5000/api/boms', {
+      const res = await fetch('${API_BASE_URL}/boms', {
         method: 'POST',
         headers: await authHeaders(),
         body: JSON.stringify(bom)
@@ -232,7 +233,7 @@ export function AppProvider({ children }) {
   const addEco = useCallback(async (eco) => {
     try {
       const payload = { ...eco, createdBy: currentUser.id };
-      const res = await fetch('http://localhost:5000/api/ecos', {
+      const res = await fetch('${API_BASE_URL}/ecos', {
         method: 'POST',
         headers: await authHeaders(),
         body: JSON.stringify(payload)
@@ -247,7 +248,7 @@ export function AppProvider({ children }) {
 
   const updateEcoStage = useCallback(async (ecoId, newStage, comment = '') => {
     try {
-      const res = await fetch(`http://localhost:5000/api/ecos/${ecoId}/stage`, {
+      const res = await fetch(`${API_BASE_URL}/ecos/${ecoId}/stage`, {
         method: 'PATCH',
         headers: await authHeaders(),
         body: JSON.stringify({ stage: newStage, comment })
@@ -268,7 +269,7 @@ export function AppProvider({ children }) {
 
   const rejectEco = useCallback(async (ecoId, comment = '') => {
     try {
-      const res = await fetch(`http://localhost:5000/api/ecos/${ecoId}/reject`, {
+      const res = await fetch(`${API_BASE_URL}/ecos/${ecoId}/reject`, {
         method: 'POST',
         headers: await authHeaders(),
         body: JSON.stringify({ comment })
@@ -282,7 +283,7 @@ export function AppProvider({ children }) {
 
   const updateEcoImages = useCallback(async (ecoId, images) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/ecos/${ecoId}/images`, {
+      const res = await fetch(`${API_BASE_URL}/ecos/${ecoId}/images`, {
         method: 'PATCH',
         headers: await authHeaders(),
         body: JSON.stringify({ attachedImages: images, imageChanges: [] }) // imageChanges syncs based on existing architecture
@@ -296,7 +297,7 @@ export function AppProvider({ children }) {
 
   const reviewEcoImage = useCallback(async (ecoId, imageChangeId, status, comment) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/ecos/${ecoId}/images/review/${imageChangeId}`, {
+      const res = await fetch(`${API_BASE_URL}/ecos/${ecoId}/images/review/${imageChangeId}`, {
         method: 'PATCH',
         headers: await authHeaders(),
         body: JSON.stringify({ status, comment })
@@ -310,7 +311,7 @@ export function AppProvider({ children }) {
 
   const markNotificationRead = useCallback(async (notifId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/notifications/${notifId}/read`, {
+      const res = await fetch(`${API_BASE_URL}/notifications/${notifId}/read`, {
         method: 'PATCH',
         headers: await authHeaders()
       });
@@ -323,7 +324,7 @@ export function AppProvider({ children }) {
   const fetchPaginatedEcos = useCallback(async (params) => {
     try {
       const query = new URLSearchParams(params).toString();
-      const res = await fetch(`http://localhost:5000/api/ecos?${query}`, {
+      const res = await fetch(`${API_BASE_URL}/ecos?${query}`, {
         headers: { 'Authorization': `Bearer ${await secureGet('token')}` }
       });
       return await res.json();
@@ -333,7 +334,7 @@ export function AppProvider({ children }) {
   const fetchPaginatedProducts = useCallback(async (params) => {
     try {
       const query = new URLSearchParams(params).toString();
-      const res = await fetch(`http://localhost:5000/api/products?${query}`, {
+      const res = await fetch(`${API_BASE_URL}/products?${query}`, {
         headers: { 'Authorization': `Bearer ${await secureGet('token')}` }
       });
       return await res.json();
@@ -343,7 +344,7 @@ export function AppProvider({ children }) {
   const fetchPaginatedBoms = useCallback(async (params) => {
     try {
       const query = new URLSearchParams(params).toString();
-      const res = await fetch(`http://localhost:5000/api/boms?${query}`, {
+      const res = await fetch(`${API_BASE_URL}/boms?${query}`, {
         headers: { 'Authorization': `Bearer ${await secureGet('token')}` }
       });
       return await res.json();

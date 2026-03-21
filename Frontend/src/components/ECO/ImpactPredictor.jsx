@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, ArrowDownRight, Minus, AlertTriangle, CheckCircle, ShieldAlert, Clock, Package } from 'lucide-react';
+import { API_BASE_URL } from '../../config/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { secureGet } from '../../capacitor/nativeServices';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +18,7 @@ export default function ImpactPredictor({ ecoId, eco, onApprove, onReject }) {
       try {
         setLoading(true);
         const token = await secureGet('token');
-        const res = await fetch(`http://localhost:5000/api/ecos/${ecoId}/impact`, {
+        const res = await fetch(`${API_BASE_URL}/ecos/${ecoId}/impact`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

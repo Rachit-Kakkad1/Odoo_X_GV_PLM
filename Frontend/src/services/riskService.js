@@ -9,25 +9,22 @@ import { secureGet } from '../capacitor/nativeServices';
  * @param {string} ecoId — The ECO ID
  * @returns {Promise<Object>} Risk analysis data
  */
-export async function fetchRiskAnalysis(ecoId) {
-  const token = await secureGet('token');
-
-  const res = await fetch(
-    `http://localhost:5000/api/ecos/${ecoId}/risk`,
-    {
-      method: 'GET',
-      headers: {
+export const analyzeRisk = async (ecoId, token) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/ecos/${ecoId}/risk`, {
+      headers: { 
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+        'Authorization': `Bearer ${token}` 
+      }
+    });
+
+    const data = await res.json();
+    if (!data.success) {
+      throw new Error(data.message || 'Risk analysis failed');
     }
-  );
-
-  const data = await res.json();
-
-  if (!data.success) {
-    throw new Error(data.message || 'Risk analysis failed');
+    return data.data;
+  } catch (err) {
+    console.error('Risk Analysis Error:', err);
+    throw err;
   }
-
-  return data.data;
-}
+};

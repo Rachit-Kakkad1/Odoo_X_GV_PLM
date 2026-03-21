@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { Hexagon, CheckCircle2, QrCode, ArrowLeft, Clock, User, FileText, Package } from 'lucide-react';
+import { API_BASE_URL } from '../config/api';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +13,7 @@ export default function PublicECOView() {
 
   useEffect(() => {
     fetch(
-      `http://localhost:5000/api/public/eco/${id}`
+      `${API_BASE_URL}/public/eco/${id}`
     )
       .then(r => r.json())
       .then(data => {

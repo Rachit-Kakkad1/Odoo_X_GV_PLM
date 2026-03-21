@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Search, UserPlus, Shield, Mail, Filter, CheckCircle, X, Check, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { Plus, Search, Filter, Edit, ChevronLeft, ChevronRight, X, UserPlus, Mail, Shield, CheckCircle, XCircle } from 'lucide-react';
+import { API_BASE_URL } from '../config/api';
 import { ROLES } from '../data/mockData';
 import { sendWelcomeEmail } from '../services/emailService';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -37,7 +38,7 @@ export default function UserManagement() {
       setIsLoading(true);
       try {
         const token = await secureGet('token');
-        const res = await fetch(`http://localhost:5000/api/users?page=${page}&limit=${limit}&search=${encodeURIComponent(searchQuery)}&role=${encodeURIComponent(roleFilter)}`, {
+        const res = await fetch(`${API_BASE_URL}/users?page=${page}&limit=${limit}&search=${encodeURIComponent(searchQuery)}&role=${encodeURIComponent(roleFilter)}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
@@ -83,7 +84,7 @@ export default function UserManagement() {
     try {
       const token = await secureGet('token');
       const method = editingUser ? 'PUT' : 'POST';
-      const url = editingUser ? `http://localhost:5000/api/users/${editingUser._id || editingUser.id}` : 'http://localhost:5000/api/users';
+      const url = editingUser ? `${API_BASE_URL}/users/${editingUser._id || editingUser.id}` : '${API_BASE_URL}/users';
       
       const res = await fetch(url, {
         method,

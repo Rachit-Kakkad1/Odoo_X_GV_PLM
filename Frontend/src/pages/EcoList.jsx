@@ -13,6 +13,7 @@ import { Search, FileText, Plus, ArrowUpRight, Filter, Paperclip, ChevronLeft, C
 import { motion } from 'framer-motion';
 import { secureGet } from '../capacitor/nativeServices';
 import { useTranslation } from 'react-i18next';
+import { API_BASE_URL } from '../config/api';
 
 export default function EcoList() {
   const { t } = useTranslation();
@@ -69,7 +70,7 @@ export default function EcoList() {
     const fetchSla = async () => {
       try {
         const token = await secureGet('token');
-        const res = await fetch('http://localhost:5000/api/ecos/sla/status', {
+        const res = await fetch('${API_BASE_URL}/ecos/sla/status', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const json = await res.json();

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Database, Activity, RefreshCw, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 import { secureGet } from '../../capacitor/nativeServices';
 import { useTranslation } from 'react-i18next';
+import { API_BASE_URL } from '../../config/api';
 
 export default function DBStatusBadge() {
   const { t } = useTranslation();
@@ -14,7 +15,7 @@ export default function DBStatusBadge() {
       const token = await secureGet('token');
       if (!token) return; // Don't poll if not logged in
       try {
-        const res = await fetch('http://localhost:5000/api/db/status', {
+        const res = await fetch(`${API_BASE_URL}/db/status`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
