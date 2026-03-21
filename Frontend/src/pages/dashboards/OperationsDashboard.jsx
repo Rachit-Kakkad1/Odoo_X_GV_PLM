@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next';
 export default function OperationsDashboard() {
   const { t } = useTranslation();
   const { products, bomList } = useApp();
-  const activeProducts = products.filter(p => p.status === 'Active');
-  const activeBoms = bomList.filter(b => b.status === 'Active');
+  const activeProducts = (products || []).filter(p => p?.status === 'Active');
+  const activeBoms = (bomList || []).filter(b => b?.status === 'Active');
 
   return (
     <div className="space-y-8 animate-fade-in">

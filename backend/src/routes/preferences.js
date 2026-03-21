@@ -42,7 +42,12 @@ router.get('/', auth, async (req, res) => {
       data: prefs
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    // If column missing or other error, fallback to default and log internally
+    console.warn('[PREF_GET_FALLBACK] Preferences fetch failed:', err.message);
+    res.json({
+      success: true,
+      data: { language: 'en' }
+    });
   }
 });
 

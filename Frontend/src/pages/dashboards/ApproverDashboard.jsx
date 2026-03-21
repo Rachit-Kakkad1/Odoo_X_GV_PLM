@@ -10,8 +10,8 @@ export default function ApproverDashboard() {
   const { t } = useTranslation();
   const { ecoList } = useApp();
 
-  const pendingApprovals = ecoList.filter(e => e.stage === 'Approval');
-  const urgentApprovals = pendingApprovals.filter(e => e.priority === 'High');
+  const pendingApprovals = (ecoList || []).filter(e => e?.stage === 'Approval');
+  const urgentApprovals = pendingApprovals.filter(e => e?.priority === 'High');
 
   return (
     <div className="space-y-8 animate-fade-in">

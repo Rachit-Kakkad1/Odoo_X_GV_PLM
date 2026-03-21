@@ -11,9 +11,9 @@ export default function EngineeringDashboard() {
   const { t } = useTranslation();
   const { ecoList, canCreateEco } = useApp();
 
-  const draftEcos = ecoList.filter(e => e.stage === 'Draft');
-  const inReviewEcos = ecoList.filter(e => e.stage === 'Approval');
-  const recentEditedEcos = ecoList.slice(0, 5); // Mocked recently edited
+  const draftEcos = (ecoList || []).filter(e => e?.stage === 'Draft');
+  const inReviewEcos = (ecoList || []).filter(e => e?.stage === 'Approval');
+  const recentEditedEcos = (ecoList || []).filter(Boolean).slice(0, 5); // Ensure no nulls before slice
 
   return (
     <div className="space-y-8 animate-fade-in">

@@ -45,10 +45,13 @@ export function AppProvider({ children }) {
         fetch(`${apiBase}/notifications`, { headers })
       ]);
 
-      if (prodRes.ok) setProducts((await prodRes.json()).data);
-      if (bomRes.ok) setBomList((await bomRes.json()).data);
-      if (ecoRes.ok) setEcoList((await ecoRes.json()).data);
-      if (notifRes.ok) setNotificationList((await notifRes.json()).data);
+      if (prodRes.ok) setProducts((await prodRes.json()).data || []);
+      if (bomRes.ok) setBomList((await bomRes.json()).data || []);
+      if (ecoRes.ok) {
+        const ecoData = await ecoRes.json();
+        setEcoList((ecoData.data || []).filter(Boolean));
+      }
+      if (notifRes.ok) setNotificationList((await notifRes.json()).data || []);
     } catch (err) {
       console.error('Failed to fetch data from backend', err);
     }
@@ -191,7 +194,7 @@ export function AppProvider({ children }) {
         }
         if (ecoRes.ok) {
           const ecoData = await ecoRes.json();
-          if (ecoData.data) setEcoList(ecoData.data);
+          if (ecoData.data) setEcoList(ecoData.data.filter(Boolean));
         }
       } catch {}
     };
