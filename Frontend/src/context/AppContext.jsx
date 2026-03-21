@@ -36,7 +36,7 @@ export function AppProvider({ children }) {
   const fetchAllData = useCallback(async (token) => {
     try {
       const headers = { 'Authorization': `Bearer ${token}` };
-      const apiBase = '${API_BASE_URL}';
+      const apiBase = `${API_BASE_URL}`;
       
       const [prodRes, bomRes, ecoRes, notifRes] = await Promise.all([
         fetch(`${apiBase}/products`, { headers }),
@@ -67,7 +67,7 @@ export function AppProvider({ children }) {
   // ==========================================//
   const login = useCallback(async (email, password) => {
     try {
-      const res = await fetch('${API_BASE_URL}/auth/login', {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -88,7 +88,7 @@ export function AppProvider({ children }) {
         fetchAllData(data.data.token);
         
         // Fetch language preset
-        fetch('${API_BASE_URL}/preferences', {
+        fetch(`${API_BASE_URL}/preferences`, {
           headers: { 'Authorization': `Bearer ${data.data.token}` }
         })
         .then(r => r.json())
@@ -128,7 +128,7 @@ export function AppProvider({ children }) {
         return;
       }
       try {
-        const res = await fetch('${API_BASE_URL}/auth/me', {
+        const res = await fetch(`${API_BASE_URL}/auth/me`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
@@ -144,7 +144,7 @@ export function AppProvider({ children }) {
           fetchAllData(token);
 
           // Fetch language preset
-          fetch('${API_BASE_URL}/preferences', {
+          fetch(`${API_BASE_URL}/preferences`, {
             headers: { 'Authorization': `Bearer ${token}` }
           })
           .then(r => r.json())
@@ -178,7 +178,7 @@ export function AppProvider({ children }) {
       if (!token) return;
       try {
         const headers = { 'Authorization': `Bearer ${token}` };
-        const apiBase = '${API_BASE_URL}';
+        const apiBase = `${API_BASE_URL}`;
 
         const [notifRes, ecoRes] = await Promise.all([
           fetch(`${apiBase}/notifications`, { headers }),
@@ -217,7 +217,7 @@ export function AppProvider({ children }) {
 
   const addBom = useCallback(async (bom) => {
     try {
-      const res = await fetch('${API_BASE_URL}/boms', {
+      const res = await fetch(`${API_BASE_URL}/boms`, {
         method: 'POST',
         headers: await authHeaders(),
         body: JSON.stringify(bom)
@@ -233,7 +233,7 @@ export function AppProvider({ children }) {
   const addEco = useCallback(async (eco) => {
     try {
       const payload = { ...eco, createdBy: currentUser.id };
-      const res = await fetch('${API_BASE_URL}/ecos', {
+      const res = await fetch(`${API_BASE_URL}/ecos`, {
         method: 'POST',
         headers: await authHeaders(),
         body: JSON.stringify(payload)

@@ -84,7 +84,7 @@ export default function UserManagement() {
     try {
       const token = await secureGet('token');
       const method = editingUser ? 'PUT' : 'POST';
-      const url = editingUser ? `${API_BASE_URL}/users/${editingUser._id || editingUser.id}` : '${API_BASE_URL}/users';
+      const url = editingUser ? `${API_BASE_URL}/users/${editingUser._id || editingUser.id}` : `${API_BASE_URL}/users`;
       
       const res = await fetch(url, {
         method,

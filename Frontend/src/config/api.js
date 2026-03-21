@@ -6,6 +6,7 @@
 
 // Vite env vars must start with VITE_
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+export const APP_URL = import.meta.env.VITE_APP_URL || window.location.origin;
 export const AUTH_URL = `${API_BASE_URL}/auth`;
 
 export const getApiUrl = (endpoint) => {

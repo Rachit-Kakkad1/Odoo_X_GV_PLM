@@ -70,7 +70,7 @@ export default function EcoList() {
     const fetchSla = async () => {
       try {
         const token = await secureGet('token');
-        const res = await fetch('${API_BASE_URL}/ecos/sla/status', {
+        const res = await fetch(`${API_BASE_URL}/ecos/sla/status`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const json = await res.json();

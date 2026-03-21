@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useTranslation } from 'react-i18next';
+import { APP_URL } from '../../config/api';
 
 export default function QRCodeModal({ eco }) {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ export default function QRCodeModal({ eco }) {
   // This is what the QR code encodes
   const ecoId    = eco._id || eco.id;
   const publicUrl =
-    `${window.location.origin}/eco/${ecoId}/public`;
+    `${APP_URL}/eco/${ecoId}/public`;
 
   // ── Download QR as PNG ────────────────────────────────
   const handleDownload = () => {
