@@ -35,12 +35,10 @@ router.patch('/:id/read', authMiddleware, async (req, res) => {
 router.post('/', authMiddleware, async (req, res) => {
   try {
     const { title, type, ecoId } = req.body;
-    const id = `n${Date.now()}`;
-    
     const result = await req.db(
-      `INSERT INTO notifications (id, title, type, eco_id, read, created_at)
-       VALUES ($1, $2, $3, $4, false, NOW()) RETURNING *`,
-      [id, title, type || 'info', ecoId || null]
+      `INSERT INTO notifications (title, type, eco_id, read, created_at)
+       VALUES ($1, $2, $3, false, NOW()) RETURNING *`,
+      [title, type || 'info', ecoId || null]
     );
 
     res.status(201).json({ success: true, data: result.rows[0] });

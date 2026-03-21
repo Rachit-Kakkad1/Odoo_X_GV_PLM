@@ -67,20 +67,16 @@ router.post('/', authMiddleware, roleMiddleware(['Admin', 'Engineering User']), 
   try {
     const { name, productId, productName, components, operations } = req.body;
     
-    const id = `bom${Date.now()}`;
     const version = '1.0';
     const status = 'Draft';
 
-    // Insert into boms table
-    // Assuming components and operations are JSONB columns in Postgres
+    // Insert into boms table (omitting id to let UUID DEFAULT work)
     const result = await req.db(
-      `INSERT INTO boms (id, name, product_id, product_name, version, status, components, operations)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      `INSERT INTO boms (name, product_id, version, status, components, operations)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
       [
-        id, 
         name, 
         productId, 
-        productName || '', 
         version, 
         status, 
         JSON.stringify(components || []), 

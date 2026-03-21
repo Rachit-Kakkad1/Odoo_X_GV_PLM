@@ -26,10 +26,10 @@ export const approvalRules = [
 //  USERS — 4 demo users (one per role)      //
 // ==========================================//
 export const users = [
-  { id: 'u1', name: 'Rishi Patel', email: 'rishi@plm.io', role: ROLES.ENGINEERING, avatar: 'RP' },
-  { id: 'u2', name: 'Ananya Sharma', email: 'ananya@plm.io', role: ROLES.APPROVER, avatar: 'AS' },
-  { id: 'u3', name: 'Vikram Desai', email: 'vikram@plm.io', role: ROLES.OPERATIONS, avatar: 'VD' },
-  { id: 'u4', name: 'Priya Mehta', email: 'priya@plm.io', role: ROLES.ADMIN, avatar: 'PM' },
+  { id: 'u1', name: 'Raj Engineer', email: 'raj@plm.com', role: ROLES.ENGINEERING, avatar: 'RE' },
+  { id: 'u2', name: 'Priya Approver', email: 'priya@plm.com', role: ROLES.APPROVER, avatar: 'PA' },
+  { id: 'u3', name: 'Ops User', email: 'ops@plm.com', role: ROLES.OPERATIONS, avatar: 'OU' },
+  { id: 'u4', name: 'Admin User', email: 'admin@plm.com', role: ROLES.ADMIN, avatar: 'AU' },
 ];
 
 // ==========================================//

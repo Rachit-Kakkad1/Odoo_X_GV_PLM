@@ -78,21 +78,21 @@ router.post('/', authMiddleware, roleMiddleware(['Admin', 'Engineering User']), 
       priority, attachedImages
     } = req.body;
 
-    const id = `eco${Date.now()}`;
     const yearPrefix = `ECO-${new Date().getFullYear()}-`;
     
     // Get count for number generation
     const countRes = await req.db("SELECT COUNT(*) FROM ecos WHERE eco_number LIKE $1", [`${yearPrefix}%`]);
     const ecoNumber = `${yearPrefix}${(parseInt(countRes.rows[0].count) + 1).toString().padStart(3, '0')}`;
 
-    // 1. Insert into ecos
+    // 1. Insert into ecos (omitting id to let UUID DEFAULT work)
     const ecoResult = await req.db(
-      `INSERT INTO ecos (id, title, eco_number, type, product_id, bom_id, stage, priority, created_by, description, effective_date, version_update, new_version, attached_images, created_at)
-       VALUES ($1, $2, $3, $4, $5, $6, 'New', $7, $8, $9, $10, $11, $12, $13, NOW()) RETURNING *`,
-      [id, title, ecoNumber, type, productId, bomId || null, priority || 'Medium', req.user.id, description || '', effectiveDate || null, versionUpdate || false, newVersion || null, JSON.stringify(attachedImages || [])]
+      `INSERT INTO ecos (title, eco_number, type, product_id, bom_id, stage, priority, created_by, description, effective_date, version_update, new_version, attached_images, created_at)
+       VALUES ($1, $2, $3, $4, $5, 'New', $6, $7, $8, $9, $10, $11, $12, NOW()) RETURNING *`,
+      [title, ecoNumber, type, productId, bomId || null, priority || 'Medium', req.user.id, description || '', effectiveDate || null, versionUpdate || false, newVersion || null, JSON.stringify(attachedImages || [])]
     );
 
     const eco = ecoResult.rows[0];
+    const newId = eco.id; // Get the auto-generated UUID
 
     // 2. Insert into eco_changes
     if (changes && changes.length > 0) {
@@ -100,7 +100,7 @@ router.post('/', authMiddleware, roleMiddleware(['Admin', 'Engineering User']), 
         await req.db(
           `INSERT INTO eco_changes (eco_id, field_name, old_value, new_value, change_type)
            VALUES ($1, $2, $3, $4, $5)`,
-          [id, change.field || change.fieldName, change.oldValue || '', change.newValue || '', change.type || 'modified']
+          [newId, change.field || change.fieldName, change.oldValue || '', change.newValue || '', change.type || 'modified']
         );
       }
     }

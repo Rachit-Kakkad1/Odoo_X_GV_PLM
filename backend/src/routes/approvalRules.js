@@ -18,12 +18,10 @@ router.get('/', authMiddleware, async (req, res) => {
 router.post('/', authMiddleware, roleMiddleware(['Admin']), async (req, res) => {
   try {
     const { name, conditions, stage, requiredRole, status } = req.body;
-    const id = `ar${Date.now()}`;
-
     const result = await req.db(
-      `INSERT INTO approval_rules (id, name, conditions, stage, required_role, status, created_at)
-       VALUES ($1, $2, $3, $4, $5, $6, NOW()) RETURNING *`,
-      [id, name, JSON.stringify(conditions || []), stage, requiredRole, status || 'Active']
+      `INSERT INTO approval_rules (name, conditions, stage, required_role, status, created_at)
+       VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *`,
+      [name, JSON.stringify(conditions || []), stage, requiredRole, status || 'Active']
     );
 
     res.status(201).json({ success: true, data: result.rows[0] });

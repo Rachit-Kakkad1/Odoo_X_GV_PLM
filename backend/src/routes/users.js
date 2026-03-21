@@ -76,12 +76,10 @@ router.post('/', authMiddleware, roleMiddleware(['Admin']), async (req, res) => 
     const tempPassword = `PLM${digits}!`;
     const hashedPassword = await bcrypt.hash(tempPassword, 12);
 
-    const id = `u${Date.now()}`;
-
     const result = await req.db(
-      `INSERT INTO users (id, name, email, password, role, status, created_at)
-       VALUES ($1, $2, $3, $4, $5, $6, NOW()) RETURNING id, name, email, role, status`,
-      [id, name, email.toLowerCase(), hashedPassword, role, status || 'Active']
+      `INSERT INTO users (name, email, password, role, status, created_at)
+       VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING id, name, email, role, status`,
+      [name, email.toLowerCase(), hashedPassword, role, status || 'Active']
     );
     
     res.status(201).json({ 

@@ -17,12 +17,10 @@ router.get('/', authMiddleware, async (req, res) => {
 router.post('/', authMiddleware, async (req, res) => {
   try {
     const { type, title, description, user, ecoId } = req.body;
-    const id = `a${Date.now()}`;
-    
     const result = await req.db(
-      `INSERT INTO activities (id, type, title, description, user_name, eco_id, created_at)
-       VALUES ($1, $2, $3, $4, $5, $6, NOW()) RETURNING *`,
-      [id, type, title, description, user, ecoId || null]
+      `INSERT INTO activities (type, title, description, user_name, eco_id, created_at)
+       VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *`,
+      [type, title, description, user, ecoId || null]
     );
 
     res.status(201).json({ success: true, data: result.rows[0] });
