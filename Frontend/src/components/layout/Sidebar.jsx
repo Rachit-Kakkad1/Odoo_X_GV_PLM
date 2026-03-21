@@ -1,23 +1,42 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, Layers, FileText, BarChart3, Settings, ChevronLeft, ChevronRight, X, Hexagon } from 'lucide-react';
+import { LayoutDashboard, Package, Layers, FileText, BarChart3, Settings, ChevronLeft, ChevronRight, X, Hexagon, Inbox, Users, GitMerge, ShieldCheck, PlusCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const navItems = [
-  { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/products', icon: Package, label: 'Products' },
-  { to: '/bom', icon: Layers, label: 'Bills of Materials' },
-  { to: '/eco', icon: FileText, label: 'Change Orders' },
-  { to: '/reports', icon: BarChart3, label: 'Reports' },
-  { to: '/settings', icon: Settings, label: 'Settings', adminOnly: true },
-];
+const roleNavMap = {
+  'Admin': [
+    { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
+    { to: '/users', icon: Users, label: 'User Management' },
+    { to: '/eco-stages', icon: GitMerge, label: 'ECO Stages' },
+    { to: '/rules', icon: ShieldCheck, label: 'Approval Rules' },
+    { to: '/reports', icon: BarChart3, label: 'Reports' },
+    { to: '/settings', icon: Settings, label: 'Settings' },
+  ],
+  'Engineering User': [
+    { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
+    { to: '/products', icon: Package, label: 'Products' },
+    { to: '/bom', icon: Layers, label: 'Bills of Materials' },
+    { to: '/eco/create', icon: PlusCircle, label: 'Create ECO' },
+    { to: '/eco', icon: FileText, label: 'My ECOs' },
+  ],
+  'Approver': [
+    { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
+    { to: '/eco', icon: Inbox, label: 'Pending Approvals' },
+    { to: '/reports', icon: BarChart3, label: 'Reports' },
+  ],
+  'Operations User': [
+    { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
+    { to: '/products', icon: Package, label: 'Products (Active)' },
+    { to: '/bom', icon: Layers, label: 'BoM (Active)' },
+  ],
+};
 
 export default function Sidebar({ mobileMenuOpen, setMobileMenuOpen, collapsed, setCollapsed }) {
-  const { canAccessSettings } = useApp();
+  const { currentUser } = useApp();
   const location = useLocation();
 
-  const filteredNav = navItems.filter(item => !item.adminOnly || canAccessSettings);
+  const filteredNav = roleNavMap[currentUser.role] || roleNavMap['Engineering User'];
 
   // Close mobile menu on route change
   useEffect(() => {
