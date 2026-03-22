@@ -56,14 +56,14 @@ export async function generateECOPdf(eco, generatedBy) {
   doc.roundedRect(margin, y - 5, 30, 8, 2, 2, 'F');
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(8);
-  doc.text(eco.stage.toUpperCase(), margin + 15, y + 0.5, 
+  doc.text(String(eco.stage || 'N/A').toUpperCase(), margin + 15, y + 0.5, 
     { align: 'center', baseline: 'middle' });
   
   // ECO Number
   doc.setTextColor(13, 148, 136);
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
-  doc.text(eco.ecoNumber, margin + 35, y);
+  doc.text(String(eco.ecoNumber || eco.eco_number || 'N/A'), margin + 35, y);
   
   y += 12;
   
@@ -71,7 +71,7 @@ export async function generateECOPdf(eco, generatedBy) {
   doc.setTextColor(15, 23, 42);
   doc.setFontSize(18);
   doc.setFont('helvetica', 'bold');
-  doc.text(eco.title, margin, y);
+  doc.text(String(eco.title || 'Untitled ECO'), margin, y);
   
   y += 10;
   
@@ -95,18 +95,18 @@ export async function generateECOPdf(eco, generatedBy) {
     margin: { left: margin, right: margin },
     head: [],
     body: [
-      ['ECO Number',   eco.ecoNumber],
-      ['Type',         eco.type],
-      ['Product',      eco.product?.name || eco.productName || 'N/A'],
-      ['BoM Version',  eco.bom?.version || 'N/A'],
-      ['Priority',     eco.priority || 'Medium'],
-      ['Stage',        eco.stage],
-      ['Raised By',    eco.createdBy?.name || eco.createdByName || 'Unknown'],
-      ['Created On',   new Date(eco.createdAt).toLocaleDateString('en-IN')],
-      ['Effective Date', eco.effectiveDate 
-        ? new Date(eco.effectiveDate).toLocaleDateString('en-IN') 
+      ['ECO Number',   String(eco.ecoNumber || eco.eco_number || 'N/A')],
+      ['Type',         String(eco.type || 'N/A')],
+      ['Product',      String(eco.product?.name || eco.productName || 'N/A')],
+      ['BoM Version',  String(eco.bom?.version || 'N/A')],
+      ['Priority',     String(eco.priority || 'Medium')],
+      ['Stage',        String(eco.stage || 'N/A')],
+      ['Raised By',    String(eco.createdBy?.name || eco.createdByName || eco.creator_name || 'Unknown')],
+      ['Created On',   eco.createdAt ? new Date(eco.createdAt).toLocaleDateString('en-IN') : 'N/A'],
+      ['Effective Date', (eco.effectiveDate || eco.effective_date) 
+        ? new Date(eco.effectiveDate || eco.effective_date).toLocaleDateString('en-IN') 
         : 'Immediate'],
-      ['Version Update', eco.versionUpdate ? `Yes — ${eco.newVersion}` : 'No'],
+      ['Version Update', eco.versionUpdate ? `Yes — ${eco.newVersion || '?'}` : 'No'],
     ],
     styles: { 
       fontSize: 10, 
@@ -139,7 +139,7 @@ export async function generateECOPdf(eco, generatedBy) {
     doc.setFontSize(10);
     doc.setTextColor(71, 85, 105);
     const descLines = doc.splitTextToSize(
-      eco.description, pageWidth - 2 * margin
+      String(eco.description || ''), pageWidth - 2 * margin
     );
     doc.text(descLines, margin, y);
     y += descLines.length * 5 + 10;
@@ -327,7 +327,7 @@ export async function generateECOPdf(eco, generatedBy) {
     );
   }
   
-  const filename = `${eco.ecoNumber}-${(eco.title||'eco').replace(/\s+/g, '-')}.pdf`;
+  const filename = `${eco.ecoNumber || eco.eco_number || 'eco'}-${String(eco.title||'eco').replace(/\s+/g, '-')}.pdf`;
   
   if (Capacitor.isNativePlatform()) {
     try {

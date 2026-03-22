@@ -24,6 +24,7 @@ export function AppProvider({ children }) {
   const [bomList, setBomList] = useState(initialBoms);
   const [ecoList, setEcoList] = useState(initialEcos);
   const [notificationList, setNotificationList] = useState(initialNotifications);
+  const [approvalRulesList, setApprovalRulesList] = useState([]);
 
   // ================================================//
   //  SESSION RESTORE — Persist login across refresh //
@@ -60,6 +61,13 @@ export function AppProvider({ children }) {
       if (notifRes.ok) {
         const notifData = await notifRes.json().catch(() => ({ data: [] }));
         setNotificationList(notifData?.data || []);
+      }
+      
+      // Fetch approval rules if admin
+      const ruleRes = await fetch(`${apiBase}/approval-rules`, { headers });
+      if (ruleRes.ok) {
+        const ruleData = await ruleRes.json().catch(() => ({ data: [] }));
+        setApprovalRulesList(ruleData?.data || []);
       }
     } catch (err) {
       console.error('Failed to fetch data from backend', err);
@@ -363,6 +371,62 @@ export function AppProvider({ children }) {
     } catch (err) { return { success: false, message: err.message }; }
   }, []);
 
+  const fetchPaginatedUsers = useCallback(async (params) => {
+    try {
+      const query = new URLSearchParams(params).toString();
+      const res = await fetch(`${API_BASE_URL}/users?${query}`, {
+        headers: { 'Authorization': `Bearer ${await secureGet('token')}` }
+      });
+      return await res.json();
+    } catch (err) { return { success: false, message: err.message }; }
+  }, []);
+
+  const addApprovalRule = useCallback(async (rule) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/approval-rules`, {
+        method: 'POST',
+        headers: await authHeaders(),
+        body: JSON.stringify(rule)
+      });
+      if (res.ok) {
+        const { data } = await res.json();
+        setApprovalRulesList(prev => [data, ...prev]);
+        return { success: true, data };
+      }
+      return { success: false, message: 'Failed to add rule' };
+    } catch (err) { return { success: false, message: err.message }; }
+  }, []);
+
+  const updateApprovalRule = useCallback(async (ruleId, updates) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/approval-rules/${ruleId}`, {
+        method: 'PUT',
+        headers: await authHeaders(),
+        body: JSON.stringify(updates)
+      });
+      if (res.ok) {
+        const { data } = await res.json();
+        setApprovalRulesList(prev => prev.map(r => r.id === ruleId ? data : r));
+        return { success: true, data };
+      }
+      return { success: false, message: 'Failed to update rule' };
+    } catch (err) { return { success: false, message: err.message }; }
+  }, []);
+
+  const deleteApprovalRule = useCallback(async (ruleId) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/approval-rules/${ruleId}`, {
+        method: 'DELETE',
+        headers: await authHeaders()
+      });
+      if (res.ok) {
+        setApprovalRulesList(prev => prev.filter(r => r.id !== ruleId));
+        return { success: true };
+      }
+      return { success: false, message: 'Failed to delete rule' };
+    } catch (err) { return { success: false, message: err.message }; }
+  }, []);
+
   const value = {
     isAuthenticated,
     login,
@@ -380,10 +444,11 @@ export function AppProvider({ children }) {
     updateEcoImages,
     reviewEcoImage,
     notificationList,
-    markNotificationRead,
-    fetchPaginatedEcos,
-    fetchPaginatedProducts,
-    fetchPaginatedBoms,
+    approvalRulesList,
+    addApprovalRule,
+    updateApprovalRule,
+    deleteApprovalRule,
+    fetchPaginatedUsers,
     canCreateEco,
     canEditDraft,
     canApprove,
