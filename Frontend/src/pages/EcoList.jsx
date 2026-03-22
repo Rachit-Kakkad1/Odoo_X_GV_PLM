@@ -16,7 +16,8 @@ import { useTranslation } from 'react-i18next';
 import { API_BASE_URL } from '../config/api';
 
 export default function EcoList() {
-  const { t } = useTranslation();
+  const trans = useTranslation();
+  const t = typeof trans.t === 'function' ? trans.t : (k) => k;
   const { fetchPaginatedEcos, canCreateEco } = useApp();
   const [ecos, setEcos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,7 +48,7 @@ export default function EcoList() {
         setTotalEcos(data.total);
       }
     } catch (err) {
-      console.error('Failed to fetch ECOs', err);
+      console.error('CRITICAL: Failed to fetch ECOs or translate them.', err);
     } finally {
       setIsLoading(false);
     }
