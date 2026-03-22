@@ -28,7 +28,7 @@ router.get('/', authMiddleware, async (req, res) => {
 
     const countSql = `SELECT COUNT(*) FROM (${sql}) AS sub`;
     const countRes = await req.db(countSql, params);
-    const total = parseInt(countRes.rows[0].count, 10);
+    const total = parseInt(countRes.rows[0]?.count || 0, 10);
 
     sql += ` ORDER BY created_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
     params.push(limit, offset);
@@ -43,7 +43,16 @@ router.get('/', authMiddleware, async (req, res) => {
       totalPages: Math.ceil(total / limit) || 1
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to fetch users' });
+    console.error('[USERS FETCH ERROR]', {
+      message: error.message,
+      query: req.query,
+      pgCode: error.code
+    });
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to fetch users',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined 
+    });
   }
 });
 
