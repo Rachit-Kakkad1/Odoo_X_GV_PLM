@@ -7,11 +7,13 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 export default function ApproverDashboard() {
-  const { t } = useTranslation();
+  const { t, ready } = useTranslation();
   const { ecoList } = useApp();
 
-  const pendingApprovals = (ecoList || []).filter(e => e?.stage === 'Approval');
+  const pendingApprovals = (ecoList || []).filter(e => (e?.stage === 'Approval') || (e?.stage === 'In Review'));
   const urgentApprovals = pendingApprovals.filter(e => e?.priority === 'High');
+
+  if (!ready) return null;
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -32,18 +34,18 @@ export default function ApproverDashboard() {
         </div>
         <div className="divide-y divide-surface-100">
           {pendingApprovals.length > 0 ? pendingApprovals.map(eco => (
-            <Link key={eco.id} to={`/eco/${eco.id}`} className="flex items-center justify-between px-6 py-4 hover:bg-surface-50 transition-colors">
+            <Link key={eco.id || eco._id} to={`/eco/${eco.id || eco._id}`} className="flex items-center justify-between px-6 py-4 hover:bg-surface-50 transition-colors">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-mono text-surface-400">{eco.ecoNumber}</span>
+                  <span className="text-xs font-mono text-surface-400">{eco.ecoNumber || eco.eco_number}</span>
                   {eco.priority === 'High' && <span className="text-[10px] bg-danger-100 text-danger-700 px-1.5 py-0.5 rounded font-bold uppercase">{t('priority.High')}</span>}
                 </div>
                 <p className="text-sm font-medium text-surface-800 truncate">{eco.title}</p>
-                <p className="text-xs text-surface-400 mt-0.5">{t('dashboards.submitted_by', 'Submitted by')} {eco.createdByName}</p>
+                <p className="text-xs text-surface-400 mt-0.5">{t('dashboards.submitted_by', 'Submitted by')} {eco.createdByName || eco.creator_name}</p>
               </div>
-              <button className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold rounded-lg shadow-sm">
+              <div className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold rounded-lg shadow-sm">
                 {t('dashboards.review_diff')}
-              </button>
+              </div>
             </Link>
           )) : (
             <div className="px-6 py-12 text-center">

@@ -16,8 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { API_BASE_URL } from '../config/api';
 
 export default function EcoList() {
-  const trans = useTranslation();
-  const t = typeof trans.t === 'function' ? trans.t : (k) => k;
+  const { t, ready } = useTranslation();
   const { fetchPaginatedEcos, canCreateEco } = useApp();
   const [ecos, setEcos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -39,16 +38,16 @@ export default function EcoList() {
       const data = await fetchPaginatedEcos({
         page,
         limit,
-        search,
-        stage: stageFilter
+        search: search || '',
+        stage: stageFilter || 'All'
       });
       if (data.success) {
-        setEcos(data.data);
-        setTotalPages(data.totalPages);
-        setTotalEcos(data.total);
+        setEcos(data.data || []);
+        setTotalPages(data.totalPages || 1);
+        setTotalEcos(data.total || 0);
       }
     } catch (err) {
-      console.error('CRITICAL: Failed to fetch ECOs or translate them.', err);
+      console.error('CRITICAL: Failed to fetch ECOs.', err);
     } finally {
       setIsLoading(false);
     }
@@ -56,10 +55,10 @@ export default function EcoList() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchEcos();
+      if (ready) fetchEcos();
     }, 400);
     return () => clearTimeout(timeoutId);
-  }, [fetchEcos]);
+  }, [fetchEcos, ready]);
 
   // Reset to page 1 when filter/search changes
   useEffect(() => {
@@ -77,14 +76,19 @@ export default function EcoList() {
         const json = await res.json();
         if (json.success && isMounted) {
           const map = {};
-          json.data.forEach(d => { map[d.ecoId] = d; });
+          (json.data || []).forEach(d => { 
+            const ecoId = d.ecoId || d.eco_id;
+            if (ecoId) map[ecoId] = d; 
+          });
           setSlaData(map);
         }
       } catch (err) { }
     };
-    fetchSla();
+    if (ecos.length > 0) fetchSla();
     return () => { isMounted = false; };
   }, [ecos]);
+
+  if (!ready) return null;
 
 
 

@@ -16,13 +16,15 @@ const statusStyles = {
 };
 
 export default function StatusBadge({ status, size = 'sm' }) {
-  const { t } = useTranslation();
+  const { t, ready } = useTranslation();
+  if (!ready || !status) return null;
+  
   const style = statusStyles[status] || 'bg-surface-100 text-surface-600 ring-surface-500/20';
   const sizeClass = size === 'lg' ? 'px-3 py-1 text-sm' : 'px-2 py-0.5 text-xs';
 
   return (
     <span className={`inline-flex items-center font-semibold rounded-full ring-1 ring-inset ${style} ${sizeClass}`}>
-      {t(`status.${status.toLowerCase().replace(/ /g, '_')}`, status)}
+      {t(`status.${String(status).toLowerCase().replace(/ /g, '_')}`, String(status))}
     </span>
   );
 }

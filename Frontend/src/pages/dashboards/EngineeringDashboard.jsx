@@ -8,12 +8,14 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 export default function EngineeringDashboard() {
-  const { t } = useTranslation();
+  const { t, ready } = useTranslation();
   const { ecoList, canCreateEco } = useApp();
 
-  const draftEcos = (ecoList || []).filter(e => e?.stage === 'Draft');
-  const inReviewEcos = (ecoList || []).filter(e => e?.stage === 'Approval');
-  const recentEditedEcos = (ecoList || []).filter(Boolean).slice(0, 5); // Ensure no nulls before slice
+  const draftEcos = (ecoList || []).filter(e => e?.stage === 'Draft' || e?.stage === 'New');
+  const inReviewEcos = (ecoList || []).filter(e => e?.stage === 'Approval' || e?.stage === 'In Review');
+  const recentEditedEcos = (ecoList || []).filter(Boolean).slice(0, 5); 
+
+  if (!ready) return null;
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -22,7 +24,6 @@ export default function EngineeringDashboard() {
         <p className="text-sm text-surface-500 mt-1">{t('dashboards.eng_sub')}</p>
       </div>
 
-      {/* Creator Focus Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <Card title={t('dashboards.my_drafts')} value={draftEcos.length} subtitle={t('dashboards.awaiting_sub')} icon={FileText} color="surface" delay={0} />
         <Card title={t('dashboards.in_review')} value={inReviewEcos.length} subtitle={t('dashboards.pending_app')} icon={Clock} color="primary" delay={1} />
@@ -43,10 +44,10 @@ export default function EngineeringDashboard() {
           </div>
           <div className="divide-y divide-surface-100">
             {recentEditedEcos.map(eco => (
-              <Link key={eco.id} to={`/eco/${eco.id}`} className="flex items-center justify-between px-6 py-4 hover:bg-surface-50 transition-colors">
+              <Link key={eco.id || eco._id} to={`/eco/${eco.id || eco._id}`} className="flex items-center justify-between px-6 py-4 hover:bg-surface-50 transition-colors">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-mono text-surface-400">{eco.ecoNumber}</span>
+                    <span className="text-xs font-mono text-surface-400">{eco.ecoNumber || eco.eco_number}</span>
                     <StatusBadge status={eco.type} />
                   </div>
                   <p className="text-sm font-medium text-surface-800 truncate">{eco.title}</p>
