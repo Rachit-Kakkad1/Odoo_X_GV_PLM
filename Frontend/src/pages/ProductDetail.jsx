@@ -65,10 +65,10 @@ export default function ProductDetail() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: t('products.category'), value: product.category },
-            { label: t('products.price'), value: `$${product.price.toLocaleString()}` },
-            { label: t('products.weight'), value: product.weight },
-            { label: t('products.material'), value: product.material },
+            { label: t('products.category'), value: product.category || '—' },
+            { label: t('products.price'), value: product.price != null ? `$${Number(product.price).toLocaleString()}` : '—' },
+            { label: t('products.weight'), value: product.weight || '—' },
+            { label: t('products.material'), value: product.material || '—' },
           ].map(item => (
             <div key={item.label} className="bg-surface-50 rounded-lg p-3">
               <p className="text-xs text-surface-400 font-medium mb-1">{item.label}</p>

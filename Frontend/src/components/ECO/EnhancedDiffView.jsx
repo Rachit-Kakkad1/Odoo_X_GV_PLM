@@ -206,7 +206,7 @@ export default function EnhancedDiffView({ eco, oldBom, newBom, type }) {
             {t('eco.total_cost_impact', 'Total cost impact:')}
           </span>
           <span style={{ fontSize: 14, fontWeight: 700, color: costImpact.amount >= 0 ? '#DC2626' : '#059669' }}>
-            {costImpact.amount >= 0 ? '+' : ''}₹{Math.abs(costImpact.amount).toLocaleString()}
+            {costImpact.amount >= 0 ? '+' : ''}₹{Math.abs(costImpact.amount || 0).toLocaleString()}
             {' '}{t('eco.per_unit', 'per unit')} ({costImpact.amount >= 0 ? '+' : ''}{costImpact.percent}%)
           </span>
         </motion.div>

@@ -156,7 +156,7 @@ export default function ImpactPredictor({ ecoId, eco, onApprove, onReject }) {
           <p className="text-xs text-slate-500 mt-2 font-medium">active in manufacturing</p>
           <div className="mt-4 pt-3 border-t border-slate-200/60">
             <p className="text-[11px] text-slate-600 flex items-center gap-1">
-              <Package size={12} /> <strong className="text-slate-800">{affectedOrders.totalUnits.toLocaleString()} {t('common.total_units', 'total units')}</strong> {t('eco.immediately_affected', 'immediately affected')}
+              <Package size={12} /> <strong className="text-slate-800">{(affectedOrders?.totalUnits || 0).toLocaleString()} {t('common.total_units', 'total units')}</strong> {t('eco.immediately_affected', 'immediately affected')}
             </p>
           </div>
         </div>
